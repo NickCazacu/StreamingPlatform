@@ -1,0 +1,14 @@
+C:\Users\Administrator\Documents\StreamingPlatform_SOLID\bin\Debug\net10.0\StreamingPlatform.exe
+C:\Users\Administrator\Documents\StreamingPlatform_SOLID\bin\Debug\net10.0\StreamingPlatform.deps.json
+C:\Users\Administrator\Documents\StreamingPlatform_SOLID\bin\Debug\net10.0\StreamingPlatform.runtimeconfig.json
+C:\Users\Administrator\Documents\StreamingPlatform_SOLID\bin\Debug\net10.0\StreamingPlatform.dll
+C:\Users\Administrator\Documents\StreamingPlatform_SOLID\bin\Debug\net10.0\StreamingPlatform.pdb
+C:\Users\Administrator\Documents\StreamingPlatform_SOLID\obj\Debug\net10.0\StreamingPlatform.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Administrator\Documents\StreamingPlatform_SOLID\obj\Debug\net10.0\StreamingPlatform.AssemblyInfoInputs.cache
+C:\Users\Administrator\Documents\StreamingPlatform_SOLID\obj\Debug\net10.0\StreamingPlatform.AssemblyInfo.cs
+C:\Users\Administrator\Documents\StreamingPlatform_SOLID\obj\Debug\net10.0\StreamingPlatform.csproj.CoreCompileInputs.cache
+C:\Users\Administrator\Documents\StreamingPlatform_SOLID\obj\Debug\net10.0\StreamingPlatform.dll
+C:\Users\Administrator\Documents\StreamingPlatform_SOLID\obj\Debug\net10.0\refint\StreamingPlatform.dll
+C:\Users\Administrator\Documents\StreamingPlatform_SOLID\obj\Debug\net10.0\StreamingPlatform.pdb
+C:\Users\Administrator\Documents\StreamingPlatform_SOLID\obj\Debug\net10.0\StreamingPlatform.genruntimeconfig.cache
+C:\Users\Administrator\Documents\StreamingPlatform_SOLID\obj\Debug\net10.0\ref\StreamingPlatform.dll
