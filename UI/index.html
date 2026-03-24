@@ -1166,7 +1166,7 @@ function getPosterByTitle(title, fallbackIndex) {
                 const grid = document.getElementById('trending-grid');
 
                 grid.innerHTML = movies.map((m, i) => `
-                    <div class="movie-card" onclick="playContent('${m.title}')">
+                    <div class="movie-card" onclick="window.location='watch.html?title=${encodeURIComponent(m.title)}'">
                         <img src="${getPosterByTitle(m.title, i)}" class="movie-poster" alt="${m.title}">
                         <span class="card-quality">${m.duration > 120 ? '4K' : 'HD'}</span>
                         <span class="card-rating">★ ${m.externalRating || m.averageRating}</span>
@@ -1195,7 +1195,7 @@ function getPosterByTitle(title, fallbackIndex) {
                 const list = document.getElementById('top-rated-list');
 
                 list.innerHTML = content.slice(0, 6).map((c, i) => `
-                    <div class="top-item" onclick="playContent('${c.title}')">
+                    <div class="top-item" onclick="window.location='watch.html?title=${encodeURIComponent(c.title)}'">
                         <span class="top-rank">${String(i + 1).padStart(2, '0')}</span>
                         <img src="${getPosterByTitle(c.title, i)}" class="top-poster" alt="${c.title}">
                         <div class="top-info">
