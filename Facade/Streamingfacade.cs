@@ -10,7 +10,7 @@ using StreamingPlatform.Services;
 namespace StreamingPlatform.Facade
 {
     // ============================================================
-    // FAÇADE PATTERN
+    // FACADE PATTERN
     // ============================================================
     // Problema: Pentru a viziona un film pe platformă, clientul trebuie:
     // 1. Să verifice dacă utilizatorul există
