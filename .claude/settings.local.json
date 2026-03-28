@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(find . -maxdepth 2 -type f -not -path */bin/* -not -path */obj/*)",
+      "Bash(grep:*)"
+    ]
+  }
+}

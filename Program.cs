@@ -33,18 +33,19 @@ namespace StreamingPlatform
             var uiPath = Path.Combine(Directory.GetCurrentDirectory(), "UI");
             if (Directory.Exists(uiPath))
             {
+                 // Servește index.html ca pagină principală
+                app.UseDefaultFiles(new DefaultFilesOptions
+                {
+                    FileProvider = new PhysicalFileProvider(uiPath),
+                    DefaultFileNames = new List<string> { "index.html" }
+                });
+
                 app.UseStaticFiles(new StaticFileOptions
                 {
                     FileProvider = new PhysicalFileProvider(uiPath),
                     RequestPath = ""
                 });
 
-                // Servește index.html ca pagină principală
-                app.UseDefaultFiles(new DefaultFilesOptions
-                {
-                    FileProvider = new PhysicalFileProvider(uiPath),
-                    DefaultFileNames = new List<string> { "index.html" }
-                });
             }
 
             // Înregistrează endpoint-urile API
@@ -85,7 +86,6 @@ System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo
 
 app.Run("http://localhost:5000");
 
-            app.Run("http://localhost:5000");
         }
     }
 }

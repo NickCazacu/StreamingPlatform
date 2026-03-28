@@ -707,38 +707,32 @@
     <script>
         const API = 'http://localhost:5000/api';
 
-        // YouTube trailer IDs pentru fiecare film/serial
+        // YouTube trailer IDs pentru fiecare film/serial moldovenesc
         const TRAILERS = {
-            'Reservoir Dogs': 'vbSMMLy6fao',
-            'The Dark Knight': 'EXeTwQWrcwY',
-            'Inception': 'YoHD9XEInc0',
-            'Pulp Fiction': 's7EdQ4FqbhY',
-            'Interstellar': 'zSWdZVtXT7E',
-            'Breaking Bad': 'HhesaQXLuRY',
-            'House M.D': 'MczMB8nU1sY',
-            'Stranger Things': 'b9EkMc79ZSU',
-            'The Witcher': 'ndl1W4ltcmg',
-            'Planet Earth': 'eLJ2slDBpMQ',
-            'Cosmos': 'XFF2ECZ8m1A'
+            'Carbon': 'xvFZjo5PgG0',
+            'Hotarul': 'dT_EBkO7A9k',
+            'Abis': 'xvFZjo5PgG0',
+            'Puterea Probabilitatii': 'xvFZjo5PgG0',
+            'Lăutarii': 'dT_EBkO7A9k',
+            'Plaha': 'xvFZjo5PgG0',
+            'Moldova: Inima de Vin': 'xvFZjo5PgG0',
+            'Chișinău — Memorii': 'xvFZjo5PgG0'
         };
 
         const POSTER_MAP = {
-            'Reservoir Dogs': 'https://m.media-amazon.com/images/M/MV5BMmMzYjg4NDctYWY0Mi00OGViLWIzMTMtYWNlZGY5ZDJmYjk3XkEyXkFqcGc@._V1_.jpg',
-            'The Dark Knight': 'https://atthemovies.uk/cdn/shop/products/DarkKnight2008adv1sht27x40in350.jpg?v=1621381289&width=1090',
-            'Inception': 'https://www.originalfilmart.com/cdn/shop/products/inception_2010_imax_original_film_art_5000x.jpg?v=1551890318',
-            'Pulp Fiction': 'https://cdn.europosters.eu/image/1300/1288.jpg',
-            'Interstellar': 'https://www.originalfilmart.com/cdn/shop/products/interstellar_2014_advance_original_film_art_682852f2-23f6-46de-a1db-4029d5b6f0b4_5000x.jpg?v=1574284010',
-            'Breaking Bad': 'https://i.ebayimg.com/images/g/eKEAAOxyOMdS4U2W/s-l1200.jpg',
-            'House M.D': 'https://www.crew-united.com/Media/Images/199/199874/199874.entity.jpg',
-            'Stranger Things': 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRYFQJsYO9oqwGtNCaeRWRg_dNYLYstNbeVXw&s',
-            'The Witcher': 'https://i.ebayimg.com/images/g/nyoAAOSw0P9hz5Vh/s-l1200.jpg',
-            'Planet Earth': 'https://m.media-amazon.com/images/M/MV5BMzMyYjg0MGMtMTlkMy00OGFiLWFiNTYtYmFmZjA5YWZiMDIwXkEyXkFqcGdeQXVyNjAwNDUxODI@._V1_.jpg',
-            'Cosmos': 'https://m.media-amazon.com/images/M/MV5BZTk5OTQyZjYtMDk3Yi00YWMyLTkwZDUtNzBkNjI4Mjg4MzBhXkEyXkFqcGdeQXVyMjg1NDcxNDE@._V1_.jpg'
+            'Carbon': 'https://m.media-amazon.com/images/M/MV5BODY1OGIxOTItM2Q4OC00ZGQyLWIwOWUtMWU4NzZkODI2MDJhXkEyXkFqcGc@._V1_UX800_.jpg',
+            'Hotarul': 'https://m.media-amazon.com/images/M/MV5BMTZhN2FlMDItMWY4ZS00OTY3LTk0ZTYtYmU0MDUzYWI5YzMyXkEyXkFqcGc@._V1_UX800_.jpg',
+            'Abis': 'https://cineplex.md/posters/Abis%20RO.jpg',
+            'Puterea Probabilitatii': 'https://m.media-amazon.com/images/M/MV5BMDA0Yjk5ZjQtYjY4MC00N2RjLWFhYjctNDZhYjRkYWZjOWYyXkEyXkFqcGc@._V1_UX800.jpg',
+            'Lăutarii': 'https://m.media-amazon.com/images/M/MV5BNjkwZDdiYzQtYmY3OS00NmI3LWIzZTMtMzMyMzhjYjk3NGI1XkEyXkFqcGc@._V1_.jpg',
+            'Plaha': 'https://images.kinorium.com/movie/1080/11994379.jpg?1759733447',
+            'Moldova: Inima de Vin': 'https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?w=400&h=600&fit=crop',
+            'Chișinău — Memorii': 'https://images.unsplash.com/photo-1486325212027-8081e485255e?w=400&h=600&fit=crop'
         };
 
         // Obținem titlul din URL
         const urlParams = new URLSearchParams(window.location.search);
-        const movieTitle = urlParams.get('title') || 'Inception';
+        const movieTitle = urlParams.get('title') || 'Carbon';
 
         let player;
         let progressInterval;

@@ -881,11 +881,12 @@
     <nav class="navbar" id="navbar">
         <a href="#" class="logo">STREAMZONE</a>
         <ul class="nav-links">
-            <li><a href="#" class="active">Acasă</a></li>
+            <li><a href="#">Acasă</a></li>
             <li><a href="#trending">Filme</a></li>
             <li><a href="#featured">Seriale</a></li>
             <li><a href="#categories">Categorii</a></li>
             <li><a href="#top-rated">Top Rated</a></li>
+            <li><a href="despre-noi.html">Despre Noi</a></li>
         </ul>
         <div class="nav-actions">
             <button class="search-btn">🔍</button>
@@ -1097,7 +1098,7 @@
             <div>
                 <h4>Companie</h4>
                 <ul class="footer-links">
-                    <li><a href="#">Despre Noi</a></li>
+                    <li><a href="despre-noi.html">Despre Noi</a></li>
                     <li><a href="#">Contact</a></li>
                     <li><a href="#">Cariere</a></li>
                     <li><a href="#">Blog</a></li>
@@ -1123,32 +1124,26 @@
         const API = 'http://localhost:5000/api';
 
         const POSTERS = [
-            'https://m.media-amazon.com/images/M/MV5BMmMzYjg4NDctYWY0Mi00OGViLWIzMTMtYWNlZGY5ZDJmYjk3XkEyXkFqcGc@._V1_.jpg',
-            'https://atthemovies.uk/cdn/shop/products/DarkKnight2008adv1sht27x40in350.jpg?v=1621381289&width=1090',
-            'https://www.originalfilmart.com/cdn/shop/products/inception_2010_imax_original_film_art_5000x.jpg?v=1551890318',
-            'https://cdn.europosters.eu/image/1300/1288.jpg',
-            'https://www.originalfilmart.com/cdn/shop/products/interstellar_2014_advance_original_film_art_682852f2-23f6-46de-a1db-4029d5b6f0b4_5000x.jpg?v=1574284010',
-            'https://i.ebayimg.com/images/g/eKEAAOxyOMdS4U2W/s-l1200.jpg',
-            'https://www.crew-united.com/Media/Images/199/199874/199874.entity.jpg',
-            'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRYFQJsYO9oqwGtNCaeRWRg_dNYLYstNbeVXw&s',
-            'https://i.ebayimg.com/images/g/nyoAAOSw0P9hz5Vh/s-l1200.jpg',
-            'https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?w=400&h=600&fit=crop',
-            'https://images.unsplash.com/photo-1536440136628-849c177e76a1?w=400&h=600&fit=crop'
+            'https://m.media-amazon.com/images/M/MV5BODY1OGIxOTItM2Q4OC00ZGQyLWIwOWUtMWU4NzZkODI2MDJhXkEyXkFqcGc@._V1_UX800_.jpg',
+            'https://m.media-amazon.com/images/M/MV5BMTZhN2FlMDItMWY4ZS00OTY3LTk0ZTYtYmU0MDUzYWI5YzMyXkEyXkFqcGc@._V1_UX800_.jpg',
+            'https://cineplex.md/posters/Abis%20RO.jpg',
+            'https://m.media-amazon.com/images/M/MV5BMDA0Yjk5ZjQtYjY4MC00N2RjLWFhYjctNDZhYjRkYWZjOWYyXkEyXkFqcGc@._V1_UX800.jpg',
+            'https://m.media-amazon.com/images/M/MV5BNjkwZDdiYzQtYmY3OS00NmI3LWIzZTMtMzMyMzhjYjk3NGI1XkEyXkFqcGc@._V1_.jpg',
+            'https://images.kinorium.com/movie/1080/11994379.jpg?1759733447',
+            'https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?w=300&h=450&fit=crop',
+            'https://images.unsplash.com/photo-1486325212027-8081e485255e?w=300&h=450&fit=crop'
         ];
 
         const POSTER_MAP = {
-    'Reservoir Dogs': 'https://m.media-amazon.com/images/M/MV5BMmMzYjg4NDctYWY0Mi00OGViLWIzMTMtYWNlZGY5ZDJmYjk3XkEyXkFqcGc@._V1_.jpg',
-    'The Dark Knight': 'https://atthemovies.uk/cdn/shop/products/DarkKnight2008adv1sht27x40in350.jpg?v=1621381289&width=1090',
-    'Inception': 'https://www.originalfilmart.com/cdn/shop/products/inception_2010_imax_original_film_art_5000x.jpg?v=1551890318',
-    'Pulp Fiction': 'https://cdn.europosters.eu/image/1300/1288.jpg',
-    'Interstellar': 'https://www.originalfilmart.com/cdn/shop/products/interstellar_2014_advance_original_film_art_682852f2-23f6-46de-a1db-4029d5b6f0b4_5000x.jpg?v=1574284010',
-    'Breaking Bad': 'https://i.ebayimg.com/images/g/eKEAAOxyOMdS4U2W/s-l1200.jpg',
-    'House M.D': 'https://www.crew-united.com/Media/Images/199/199874/199874.entity.jpg',
-    'Stranger Things': 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRYFQJsYO9oqwGtNCaeRWRg_dNYLYstNbeVXw&s',
-    'The Witcher': 'https://i.ebayimg.com/images/g/nyoAAOSw0P9hz5Vh/s-l1200.jpg',
-    'Planet Earth': 'https://m.media-amazon.com/images/M/MV5BMzY4NDBkMWYtYzdkYy00YzBjLWJmODctMWM4YjYzZTdjNWE5XkEyXkFqcGc@._V1_.jpg',
-    'Cosmos': 'https://upload.wikimedia.org/wikipedia/en/8/8e/Cosmos_spacetime_odyssey_titlecard.jpg'
-};
+            'Carbon': 'https://m.media-amazon.com/images/M/MV5BODY1OGIxOTItM2Q4OC00ZGQyLWIwOWUtMWU4NzZkODI2MDJhXkEyXkFqcGc@._V1_UX800_.jpg',
+            'Hotarul': 'https://m.media-amazon.com/images/M/MV5BMTZhN2FlMDItMWY4ZS00OTY3LTk0ZTYtYmU0MDUzYWI5YzMyXkEyXkFqcGc@._V1_UX800_.jpg',
+            'Abis': 'https://cineplex.md/posters/Abis%20RO.jpg',
+            'Puterea Probabilitatii': 'https://m.media-amazon.com/images/M/MV5BMDA0Yjk5ZjQtYjY4MC00N2RjLWFhYjctNDZhYjRkYWZjOWYyXkEyXkFqcGc@._V1_UX800.jpg',
+            'Lăutarii': 'https://m.media-amazon.com/images/M/MV5BNjkwZDdiYzQtYmY3OS00NmI3LWIzZTMtMzMyMzhjYjk3NGI1XkEyXkFqcGc@._V1_.jpg',
+            'Plaha': 'https://images.kinorium.com/movie/1080/11994379.jpg?1759733447',
+            'Moldova: Inima de Vin': 'https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?w=300&h=450&fit=crop',
+            'Chișinău — Memorii': 'https://images.unsplash.com/photo-1486325212027-8081e485255e?w=300&h=450&fit=crop'
+        };
 
 function getPosterByTitle(title, fallbackIndex) {
     return POSTER_MAP[title] || POSTERS[fallbackIndex % POSTERS.length];
@@ -1167,7 +1162,7 @@ function getPosterByTitle(title, fallbackIndex) {
 
                 grid.innerHTML = movies.map((m, i) => `
                     <div class="movie-card" onclick="window.location='watch.html?title=${encodeURIComponent(m.title)}'">
-                        <img src="${getPosterByTitle(m.title, i)}" class="movie-poster" alt="${m.title}">
+                        <img src="${getPosterByTitle(m.title, i)}" class="movie-poster" alt="${m.title}" loading="lazy" decoding="async">
                         <span class="card-quality">${m.duration > 120 ? '4K' : 'HD'}</span>
                         <span class="card-rating">★ ${m.externalRating || m.averageRating}</span>
                         <div class="card-play">▶</div>
@@ -1197,7 +1192,7 @@ function getPosterByTitle(title, fallbackIndex) {
                 list.innerHTML = content.slice(0, 6).map((c, i) => `
                     <div class="top-item" onclick="window.location='watch.html?title=${encodeURIComponent(c.title)}'">
                         <span class="top-rank">${String(i + 1).padStart(2, '0')}</span>
-                        <img src="${getPosterByTitle(c.title, i)}" class="top-poster" alt="${c.title}">
+                        <img src="${getPosterByTitle(c.title, i)}" class="top-poster" alt="${c.title}" loading="lazy" decoding="async">
                         <div class="top-info">
                             <h4 class="top-title">${c.title}</h4>
                             <div class="top-meta">${c.genre} • ${c.type} • ${c.duration} min</div>
@@ -1332,9 +1327,13 @@ function getPosterByTitle(title, fallbackIndex) {
         // ========== SMOOTH SCROLL ==========
         document.querySelectorAll('a[href^="#"]').forEach(link => {
             link.addEventListener('click', e => {
-                e.preventDefault();
-                const t = document.querySelector(link.getAttribute('href'));
-                if (t) t.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                const href = link.getAttribute('href');
+                if (!href || href === '#') return;
+                const t = document.querySelector(href);
+                if (t) {
+                    e.preventDefault();
+                    t.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
             });
         });
 
