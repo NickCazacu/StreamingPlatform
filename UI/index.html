@@ -829,6 +829,214 @@
             font-size: 13px;
         }
 
+        /* ========== STRATEGY / MEMENTO / ITERATOR CONTROLS ========== */
+        .pattern-tabs {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 28px;
+        }
+
+        .pattern-tab {
+            background: rgba(123, 46, 58, 0.15);
+            border: 1px solid rgba(160, 64, 77, 0.25);
+            color: var(--white-soft);
+            padding: 10px 22px;
+            border-radius: 30px;
+            font-family: 'Raleway', sans-serif;
+            font-size: 13px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            cursor: pointer;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .pattern-tab:hover {
+            background: rgba(123, 46, 58, 0.3);
+            border-color: var(--burgundy-accent);
+            color: var(--white);
+            transform: translateY(-1px);
+        }
+
+        .pattern-tab.active {
+            background: linear-gradient(135deg, var(--burgundy), var(--burgundy-light));
+            border-color: var(--burgundy-accent);
+            color: var(--white);
+            box-shadow: 0 4px 14px rgba(123, 46, 58, 0.4);
+        }
+
+        .section-pattern-badge {
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            padding: 4px 12px;
+            border-radius: 20px;
+            background: rgba(212, 168, 83, 0.12);
+            border: 1px solid rgba(212, 168, 83, 0.3);
+            color: var(--gold);
+            margin-left: 12px;
+            vertical-align: middle;
+        }
+
+        /* Memento controls */
+        .memento-bar {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: var(--bg-card);
+            padding: 10px 16px;
+            border-radius: 30px;
+            border: 1px solid rgba(123, 46, 58, 0.2);
+        }
+
+        .memento-btn {
+            background: rgba(123, 46, 58, 0.2);
+            border: 1px solid rgba(160, 64, 77, 0.3);
+            color: var(--white-soft);
+            width: 36px; height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 16px;
+            transition: var(--transition);
+        }
+
+        .memento-btn:hover:not(:disabled) {
+            background: var(--burgundy);
+            color: var(--white);
+            border-color: var(--burgundy-accent);
+        }
+
+        .memento-btn:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+
+        .memento-info {
+            font-size: 12px;
+            color: var(--text-muted);
+            letter-spacing: 0.5px;
+        }
+
+        .memento-info b {
+            color: var(--gold);
+            font-family: 'Playfair Display', serif;
+            font-size: 14px;
+        }
+
+        /* Genre dropdown for Strategy ByGenre */
+        .genre-select-wrapper {
+            display: none;
+            margin-bottom: 24px;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .genre-select-wrapper.visible { display: flex; }
+
+        .genre-select-wrapper label {
+            font-size: 13px;
+            color: var(--text-muted);
+            letter-spacing: 0.5px;
+        }
+
+        .genre-select {
+            background: var(--bg-card);
+            border: 1px solid rgba(123, 46, 58, 0.3);
+            color: var(--white);
+            padding: 10px 18px;
+            border-radius: 24px;
+            font-family: 'Raleway', sans-serif;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            outline: none;
+        }
+
+        .genre-select:focus {
+            border-color: var(--burgundy-accent);
+        }
+
+        /* Iterator section grid */
+        .iterator-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 16px;
+        }
+
+        .iter-item {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 14px 18px;
+            background: var(--bg-card);
+            border-radius: var(--radius);
+            border: 1px solid rgba(123, 46, 58, 0.1);
+            transition: var(--transition);
+            cursor: pointer;
+        }
+
+        .iter-item:hover {
+            background: var(--bg-card-hover);
+            border-color: rgba(196, 85, 103, 0.3);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+        }
+
+        .iter-rank {
+            font-family: 'Playfair Display', serif;
+            font-size: 24px;
+            font-weight: 800;
+            color: var(--burgundy-accent);
+            min-width: 36px;
+            text-align: center;
+        }
+
+        .iter-info { flex: 1; min-width: 0; }
+
+        .iter-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 15px;
+            font-weight: 600;
+            margin-bottom: 4px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .iter-meta {
+            font-size: 11px;
+            color: var(--text-muted);
+            display: flex;
+            gap: 8px;
+        }
+
+        .iter-meta .gold { color: var(--gold); }
+
+        .iterator-info-bar {
+            background: var(--bg-card);
+            border-left: 3px solid var(--burgundy-accent);
+            padding: 14px 20px;
+            border-radius: var(--radius-sm);
+            margin-bottom: 24px;
+            font-size: 13px;
+            color: var(--text-muted);
+            font-style: italic;
+        }
+
+        .iterator-info-bar b {
+            color: var(--gold);
+            font-style: normal;
+            font-family: 'JetBrains Mono', 'Courier New', monospace;
+            font-size: 12px;
+        }
+
         /* ========== ANIMATIONS ========== */
         @keyframes fadeInUp {
             from { opacity: 0; transform: translateY(30px); }
@@ -890,9 +1098,26 @@
         </ul>
         <div class="nav-actions">
             <button class="search-btn">🔍</button>
-            <button class="btn-premium">★ Premium</button>
+            <a href="account.html" id="account-link" class="btn-premium" style="text-decoration:none; display:inline-flex; align-items:center; gap:8px;">
+                <span id="account-avatar" style="display:none; width:24px; height:24px; border-radius:50%; background:rgba(0,0,0,0.25); align-items:center; justify-content:center; font-family:'Playfair Display', serif; font-size:13px; font-weight:700;"></span>
+                <span id="account-label">Cont</span>
+            </a>
         </div>
     </nav>
+    <script>
+        (function() {
+            const profileName = localStorage.getItem('sz_activeProfileName');
+            const username = localStorage.getItem('sz_username');
+            if (profileName) {
+                document.getElementById('account-label').textContent = profileName;
+                const av = document.getElementById('account-avatar');
+                av.style.display = 'inline-flex';
+                av.textContent = profileName.charAt(0).toUpperCase();
+            } else if (username) {
+                document.getElementById('account-label').textContent = username;
+            }
+        })();
+    </script>
 
     <!-- ========== HERO ========== -->
     <section class="hero">
@@ -930,18 +1155,43 @@
         </div>
     </section>
 
-    <!-- ========== TRENDING ========== -->
+    <!-- ========== TRENDING / STRATEGY + MEMENTO ========== -->
     <section class="section" id="trending">
         <div class="section-header reveal">
             <div>
-                <h2 class="section-title">Trending <span class="accent">Acum</span></h2>
-                <p class="section-subtitle">Cele mai vizionate filme ale momentului</p>
+                <h2 class="section-title">Recomandări <span class="accent">Personalizate</span><span class="section-pattern-badge">Strategy + Memento</span></h2>
+                <p class="section-subtitle">Alege algoritmul de descoperire — fiecare alegere se salvează automat ca snapshot, navighezi cu Înapoi/Înainte</p>
             </div>
-            <a href="#" class="view-all">Vezi toate →</a>
+            <div class="memento-bar">
+                <button class="memento-btn" id="memento-back" onclick="mementoBack()" title="Stare anterioară" disabled>←</button>
+                <span class="memento-info">Snapshots: <b id="memento-count">0</b></span>
+                <button class="memento-btn" id="memento-forward" onclick="mementoForward()" title="Stare ulterioară" disabled>→</button>
+            </div>
         </div>
+
+        <div class="pattern-tabs reveal" id="strategy-tabs">
+            <button class="pattern-tab active" data-strategy="toprated">⭐ Top Rated</button>
+            <button class="pattern-tab" data-strategy="mostviewed">👁 Cele mai vizionate</button>
+            <button class="pattern-tab" data-strategy="bygenre">🎭 După gen</button>
+            <button class="pattern-tab" data-strategy="shortcontent">⏱ Conținut scurt</button>
+        </div>
+
+        <div class="genre-select-wrapper reveal" id="genre-select-wrapper">
+            <label>Filtrează după gen:</label>
+            <select class="genre-select" id="strategy-genre-select" onchange="onStrategyChange()">
+                <option value="Drama">Drama</option>
+                <option value="Action">Action</option>
+                <option value="SciFi">Sci-Fi</option>
+                <option value="Comedy">Comedy</option>
+                <option value="Horror">Horror</option>
+                <option value="Documentary">Documentary</option>
+                <option value="Fantasy">Fantasy</option>
+            </select>
+        </div>
+
         <div class="trending-grid reveal" id="trending-grid">
             <div style="color: var(--text-muted); grid-column: 1/-1; text-align: center; padding: 40px;">
-                Se încarcă filmele din API...
+                Se încarcă recomandările din API...
             </div>
         </div>
     </section>
@@ -1041,6 +1291,45 @@
                     <div class="category-name">Documentar</div>
                     <div class="category-count">156 titluri</div>
                 </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== ITERATOR ========== -->
+    <section class="section" id="iterator-section">
+        <div class="section-header reveal">
+            <div>
+                <h2 class="section-title">Explorează <span class="accent">Catalogul</span><span class="section-pattern-badge">Iterator</span></h2>
+                <p class="section-subtitle">Trei moduri de traversare a colecției — clientul nu cunoaște structura internă, doar interfața iterator</p>
+            </div>
+        </div>
+
+        <div class="pattern-tabs reveal" id="iterator-tabs">
+            <button class="pattern-tab active" data-iter="sequential">🔢 Secvențial</button>
+            <button class="pattern-tab" data-iter="genre">🎭 Pe gen</button>
+            <button class="pattern-tab" data-iter="toprated">⭐ Top Rated</button>
+        </div>
+
+        <div class="genre-select-wrapper reveal" id="iter-genre-wrapper">
+            <label>Gen pentru iterare:</label>
+            <select class="genre-select" id="iter-genre-select" onchange="onIteratorChange()">
+                <option value="Drama">Drama</option>
+                <option value="Action">Action</option>
+                <option value="SciFi">Sci-Fi</option>
+                <option value="Comedy">Comedy</option>
+                <option value="Horror">Horror</option>
+                <option value="Documentary">Documentary</option>
+                <option value="Fantasy">Fantasy</option>
+            </select>
+        </div>
+
+        <div class="iterator-info-bar reveal" id="iterator-info-bar">
+            <b>SequentialIterator</b> · navighează liniar prin colecție · 0 / 0 elemente
+        </div>
+
+        <div class="iterator-grid reveal" id="iterator-grid">
+            <div style="color: var(--text-muted); grid-column: 1/-1; text-align: center; padding: 40px;">
+                Se încarcă iteratorul...
             </div>
         </div>
     </section>
@@ -1153,25 +1442,41 @@ function getPosterByTitle(title, fallbackIndex) {
             return POSTERS[index % POSTERS.length];
         }
 
-        // ========== LOAD MOVIES FROM API ==========
-        async function loadMovies() {
+        // ============================================================
+        // STRATEGY + MEMENTO — Recomandări personalizate
+        // ============================================================
+        const SESSION_USER = 'web-session';
+        let currentStrategy = 'toprated';
+        let currentStrategyGenre = 'Drama';
+        let isRestoringFromMemento = false;
+
+        async function loadStrategy() {
             try {
-                const res = await fetch(`${API}/movies`);
-                const movies = await res.json();
+                let url = `${API}/strategy/recommend?strategy=${currentStrategy}&max=10`;
+                if (currentStrategy === 'bygenre') {
+                    url += `&genre=${encodeURIComponent(currentStrategyGenre)}`;
+                }
+                const res = await fetch(url);
+                const data = await res.json();
                 const grid = document.getElementById('trending-grid');
 
-                grid.innerHTML = movies.map((m, i) => `
+                if (!data.recommendations || !data.recommendations.length) {
+                    grid.innerHTML = '<div style="color: var(--text-muted); grid-column: 1/-1; text-align: center; padding: 40px;">Niciun rezultat pentru strategia aleasă.</div>';
+                    return;
+                }
+
+                grid.innerHTML = data.recommendations.map((m, i) => `
                     <div class="movie-card" onclick="window.location='watch.html?title=${encodeURIComponent(m.title)}'">
                         <img src="${getPosterByTitle(m.title, i)}" class="movie-poster" alt="${m.title}" loading="lazy" decoding="async">
                         <span class="card-quality">${m.duration > 120 ? '4K' : 'HD'}</span>
-                        <span class="card-rating">★ ${m.externalRating || m.averageRating}</span>
+                        <span class="card-rating">★ ${m.averageRating}</span>
                         <div class="card-play">▶</div>
                         <div class="card-overlay">
                             <h3 class="card-title">${m.title}</h3>
                             <div class="card-meta">
                                 <span>${m.genre}</span>
                                 <span>${m.duration} min</span>
-                                <span>${m.director}</span>
+                                <span>${m.views || 0} vis.</span>
                             </div>
                         </div>
                     </div>
@@ -1180,6 +1485,169 @@ function getPosterByTitle(title, fallbackIndex) {
                 document.getElementById('trending-grid').innerHTML =
                     '<div style="color:#c45567;grid-column:1/-1;text-align:center;padding:40px;">❌ API nu e pornit. Rulează: dotnet run --project StreamingPlatform.csproj</div>';
             }
+        }
+
+        async function onStrategyChange() {
+            // Salvăm starea precedentă în Memento (înainte de a o schimba)
+            if (!isRestoringFromMemento) {
+                await saveMementoSnapshot();
+            }
+            await loadStrategy();
+            await refreshMementoStatus();
+        }
+
+        function setupStrategyTabs() {
+            document.querySelectorAll('#strategy-tabs .pattern-tab').forEach(btn => {
+                btn.addEventListener('click', async () => {
+                    if (btn.classList.contains('active')) return;
+                    document.querySelectorAll('#strategy-tabs .pattern-tab').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    currentStrategy = btn.dataset.strategy;
+                    document.getElementById('genre-select-wrapper').classList.toggle('visible', currentStrategy === 'bygenre');
+                    if (currentStrategy === 'bygenre') {
+                        currentStrategyGenre = document.getElementById('strategy-genre-select').value;
+                    }
+                    await onStrategyChange();
+                });
+            });
+            document.getElementById('strategy-genre-select').addEventListener('change', e => {
+                currentStrategyGenre = e.target.value;
+            });
+        }
+
+        // ========== MEMENTO ==========
+        async function saveMementoSnapshot() {
+            try {
+                await fetch(`${API}/memento/session/${SESSION_USER}/save`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        sortBy: currentStrategy,
+                        genreFilter: currentStrategy === 'bygenre' ? currentStrategyGenre : null,
+                        searchQuery: null,
+                        currentPage: 1
+                    })
+                });
+            } catch (e) { console.error('Memento save:', e); }
+        }
+
+        async function refreshMementoStatus() {
+            try {
+                const res = await fetch(`${API}/memento/session/${SESSION_USER}`);
+                const data = await res.json();
+                document.getElementById('memento-count').textContent = data.historyCount || 0;
+                document.getElementById('memento-back').disabled = !data.canUndo;
+                document.getElementById('memento-forward').disabled = !data.canRedo;
+            } catch (e) { console.error('Memento status:', e); }
+        }
+
+        async function mementoBack() {
+            try {
+                const res = await fetch(`${API}/memento/session/${SESSION_USER}/undo`, { method: 'POST' });
+                const data = await res.json();
+                if (data.current) await applyMementoState();
+            } catch (e) { console.error('Memento undo:', e); }
+        }
+
+        async function mementoForward() {
+            try {
+                const res = await fetch(`${API}/memento/session/${SESSION_USER}/redo`, { method: 'POST' });
+                const data = await res.json();
+                if (data.current) await applyMementoState();
+            } catch (e) { console.error('Memento redo:', e); }
+        }
+
+        async function applyMementoState() {
+            try {
+                const res = await fetch(`${API}/memento/session/${SESSION_USER}`);
+                const data = await res.json();
+                const restored = data.sortBy || 'toprated';
+                isRestoringFromMemento = true;
+                // Aplicăm starea în UI (fără a salva încă un snapshot)
+                document.querySelectorAll('#strategy-tabs .pattern-tab').forEach(b => {
+                    b.classList.toggle('active', b.dataset.strategy === restored);
+                });
+                currentStrategy = restored;
+                if (restored === 'bygenre' && data.genreFilter) {
+                    currentStrategyGenre = data.genreFilter;
+                    document.getElementById('strategy-genre-select').value = data.genreFilter;
+                }
+                document.getElementById('genre-select-wrapper').classList.toggle('visible', restored === 'bygenre');
+                await loadStrategy();
+                await refreshMementoStatus();
+                isRestoringFromMemento = false;
+            } catch (e) { console.error('Apply memento:', e); }
+        }
+
+        // ============================================================
+        // ITERATOR — Navigare colecție
+        // ============================================================
+        let currentIterator = 'sequential';
+        let currentIteratorGenre = 'Drama';
+
+        async function loadIterator() {
+            try {
+                let url = `${API}/iterator?type=${currentIterator}`;
+                if (currentIterator === 'genre') {
+                    url += `&genre=${encodeURIComponent(currentIteratorGenre)}`;
+                } else if (currentIterator === 'toprated') {
+                    url += `&top=8`;
+                }
+                const res = await fetch(url);
+                const data = await res.json();
+
+                document.getElementById('iterator-info-bar').innerHTML =
+                    `<b>${data.iteratorType}</b> · ${getIteratorDesc(currentIterator)} · ${data.totalCount} element${data.totalCount === 1 ? '' : 'e'} găsit${data.totalCount === 1 ? '' : 'e'}`;
+
+                const grid = document.getElementById('iterator-grid');
+                if (!data.items || !data.items.length) {
+                    grid.innerHTML = '<div style="color: var(--text-muted); grid-column: 1/-1; text-align: center; padding: 40px;">Iteratorul nu a returnat elemente.</div>';
+                    return;
+                }
+
+                grid.innerHTML = data.items.map(item => `
+                    <div class="iter-item" onclick="window.location='watch.html?title=${encodeURIComponent(item.title)}'">
+                        <span class="iter-rank">${String(item.rank).padStart(2, '0')}</span>
+                        <div class="iter-info">
+                            <div class="iter-title">${item.title}</div>
+                            <div class="iter-meta">
+                                <span>${item.genre}</span>
+                                <span>${item.duration} min</span>
+                                <span class="gold">★ ${item.averageRating}</span>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+            } catch (e) {
+                document.getElementById('iterator-grid').innerHTML =
+                    '<div style="color:#c45567;grid-column:1/-1;text-align:center;padding:40px;">❌ Iterator API indisponibil</div>';
+            }
+        }
+
+        function getIteratorDesc(type) {
+            return {
+                sequential: 'navighează liniar prin colecție',
+                genre: 'filtrează doar conținut din genul ales',
+                toprated: 'sortează descrescător după rating'
+            }[type] || '';
+        }
+
+        async function onIteratorChange() {
+            currentIteratorGenre = document.getElementById('iter-genre-select').value;
+            await loadIterator();
+        }
+
+        function setupIteratorTabs() {
+            document.querySelectorAll('#iterator-tabs .pattern-tab').forEach(btn => {
+                btn.addEventListener('click', async () => {
+                    if (btn.classList.contains('active')) return;
+                    document.querySelectorAll('#iterator-tabs .pattern-tab').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    currentIterator = btn.dataset.iter;
+                    document.getElementById('iter-genre-wrapper').classList.toggle('visible', currentIterator === 'genre');
+                    await loadIterator();
+                });
+            });
         }
 
         // ========== LOAD TOP RATED FROM API ==========
@@ -1338,10 +1806,14 @@ function getPosterByTitle(title, fallbackIndex) {
         });
 
         // ========== LOAD ALL DATA FROM API ==========
-        loadMovies();
+        setupStrategyTabs();
+        setupIteratorTabs();
+        loadStrategy();
+        loadIterator();
         loadTopRated();
         loadStats();
         loadGenres();
+        refreshMementoStatus();
     </script>
 </body>
 </html>

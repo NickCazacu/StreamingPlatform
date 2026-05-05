@@ -1,0 +1,844 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StreamZone — Cont și Profile</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;800&family=Raleway:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #1a0a0e;
+            --bg-secondary: #2a1118;
+            --bg-card: #321520;
+            --bg-card-hover: #3d1a28;
+            --burgundy-dark: #5c1f28;
+            --burgundy: #7b2e3a;
+            --burgundy-mid: #8b3345;
+            --burgundy-light: #a0404d;
+            --burgundy-accent: #c45567;
+            --gold: #d4a853;
+            --gold-light: #e8c97a;
+            --white: #f5f0f1;
+            --white-soft: #e0d5d8;
+            --text-muted: #9a8a8e;
+            --text-dim: #6b5a5f;
+            --error: #d04a5a;
+            --success: #4ea876;
+            --shadow-burgundy: 0 8px 32px rgba(123, 46, 58, 0.3);
+            --shadow-deep: 0 16px 48px rgba(0, 0, 0, 0.5);
+            --radius: 12px;
+            --radius-sm: 8px;
+            --radius-lg: 20px;
+            --transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body {
+            font-family: 'Raleway', sans-serif;
+            background:
+                radial-gradient(ellipse at top, rgba(123, 46, 58, 0.25), transparent 60%),
+                radial-gradient(ellipse at bottom, rgba(212, 168, 83, 0.08), transparent 60%),
+                var(--bg-primary);
+            color: var(--white);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            line-height: 1.6;
+        }
+
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: var(--bg-primary); }
+        ::-webkit-scrollbar-thumb { background: var(--burgundy); border-radius: 3px; }
+
+        /* ========== TOP BAR ========== */
+        .topbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 24px 60px;
+        }
+        .logo {
+            font-family: 'Playfair Display', serif;
+            font-size: 28px;
+            font-weight: 800;
+            letter-spacing: 2px;
+            background: linear-gradient(135deg, var(--burgundy-accent), var(--gold));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-decoration: none;
+        }
+        .topbar-actions { display: flex; gap: 16px; align-items: center; }
+        .topbar-actions a {
+            color: var(--white-soft);
+            text-decoration: none;
+            font-size: 13px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            transition: var(--transition);
+        }
+        .topbar-actions a:hover { color: var(--burgundy-accent); }
+
+        /* ========== MAIN ========== */
+        main {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 24px 80px;
+        }
+
+        .panel { display: none; width: 100%; max-width: 480px; }
+        .panel.active { display: block; animation: fadeIn 0.4s ease; }
+        .panel-wide { max-width: 1100px; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(12px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .card {
+            background: linear-gradient(160deg, var(--bg-card), var(--bg-secondary));
+            border: 1px solid rgba(196, 85, 103, 0.18);
+            border-radius: var(--radius-lg);
+            padding: 48px 44px;
+            box-shadow: var(--shadow-deep);
+            backdrop-filter: blur(20px);
+        }
+
+        .card h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 34px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            background: linear-gradient(135deg, var(--white), var(--burgundy-accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .card .subtitle {
+            color: var(--text-muted);
+            font-size: 14px;
+            margin-bottom: 32px;
+        }
+
+        /* ========== FORMS ========== */
+        .form-group { margin-bottom: 18px; }
+        .form-group label {
+            display: block;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 14px 16px;
+            background: rgba(26, 10, 14, 0.6);
+            border: 1px solid rgba(196, 85, 103, 0.2);
+            border-radius: var(--radius-sm);
+            color: var(--white);
+            font-family: 'Raleway', sans-serif;
+            font-size: 14px;
+            transition: var(--transition);
+        }
+        .form-group input:focus, .form-group select:focus {
+            outline: none;
+            border-color: var(--burgundy-accent);
+            box-shadow: 0 0 0 3px rgba(196, 85, 103, 0.15);
+            background: rgba(26, 10, 14, 0.85);
+        }
+        .form-group .checkbox-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--white-soft);
+            font-size: 14px;
+            cursor: pointer;
+        }
+        .form-group .checkbox-row input { width: auto; cursor: pointer; }
+
+        .btn {
+            width: 100%;
+            padding: 14px 24px;
+            background: linear-gradient(135deg, var(--burgundy), var(--burgundy-light));
+            color: var(--white);
+            border: none;
+            border-radius: 30px;
+            font-family: 'Raleway', sans-serif;
+            font-size: 14px;
+            font-weight: 600;
+            letter-spacing: 1.2px;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(123, 46, 58, 0.45);
+        }
+        .btn:disabled { opacity: 0.6; cursor: wait; transform: none; box-shadow: none; }
+
+        .btn-secondary {
+            background: transparent;
+            border: 1px solid rgba(196, 85, 103, 0.4);
+            color: var(--white-soft);
+        }
+        .btn-secondary:hover {
+            background: rgba(196, 85, 103, 0.12);
+            border-color: var(--burgundy-accent);
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #5a1a22, #8a2a35);
+        }
+
+        .form-footer {
+            text-align: center;
+            margin-top: 24px;
+            color: var(--text-muted);
+            font-size: 14px;
+        }
+        .form-footer a {
+            color: var(--burgundy-accent);
+            text-decoration: none;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        .form-footer a:hover { color: var(--gold); }
+
+        .alert {
+            padding: 12px 16px;
+            border-radius: var(--radius-sm);
+            font-size: 13px;
+            margin-bottom: 20px;
+            display: none;
+        }
+        .alert.show { display: block; animation: fadeIn 0.3s ease; }
+        .alert-error { background: rgba(208, 74, 90, 0.15); border: 1px solid rgba(208, 74, 90, 0.4); color: #f5a8b0; }
+        .alert-success { background: rgba(78, 168, 118, 0.15); border: 1px solid rgba(78, 168, 118, 0.4); color: #a0d8b8; }
+
+        /* ========== PROFILE PICKER ========== */
+        .picker-header { text-align: center; margin-bottom: 48px; }
+        .picker-header h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 48px;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--white), var(--burgundy-accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 12px;
+        }
+        .picker-header p { color: var(--text-muted); font-size: 16px; }
+
+        .profiles-grid {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 32px;
+            margin-bottom: 40px;
+        }
+
+        .profile-card {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 14px;
+            cursor: pointer;
+            transition: var(--transition);
+            position: relative;
+        }
+        .profile-card:hover { transform: translateY(-4px); }
+
+        .avatar {
+            width: 140px;
+            height: 140px;
+            border-radius: 18px;
+            background: linear-gradient(135deg, var(--burgundy), var(--burgundy-light));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Playfair Display', serif;
+            font-size: 64px;
+            font-weight: 700;
+            color: var(--white);
+            border: 3px solid transparent;
+            transition: var(--transition);
+            box-shadow: var(--shadow-burgundy);
+        }
+        .profile-card:hover .avatar {
+            border-color: var(--burgundy-accent);
+            box-shadow: 0 12px 36px rgba(196, 85, 103, 0.4);
+        }
+        .avatar-kids {
+            background: linear-gradient(135deg, var(--gold), #b8893f);
+            color: #2a1118;
+        }
+
+        .profile-name {
+            font-size: 16px;
+            font-weight: 500;
+            color: var(--white-soft);
+            transition: var(--transition);
+        }
+        .profile-card:hover .profile-name { color: var(--burgundy-accent); }
+
+        .badge-kids {
+            position: absolute;
+            top: -6px;
+            right: -6px;
+            background: var(--gold);
+            color: #2a1118;
+            font-size: 10px;
+            font-weight: 700;
+            padding: 4px 8px;
+            border-radius: 8px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .delete-btn {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: rgba(0, 0, 0, 0.7);
+            border: none;
+            color: var(--white);
+            cursor: pointer;
+            font-size: 14px;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+        }
+        .profile-card:hover .delete-btn.editing { display: flex; }
+        .delete-btn:hover { background: var(--error); }
+
+        .add-profile {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 14px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        .add-profile .avatar {
+            background: transparent;
+            border: 3px dashed rgba(196, 85, 103, 0.4);
+            color: var(--burgundy-accent);
+        }
+        .add-profile:hover .avatar {
+            border-color: var(--burgundy-accent);
+            background: rgba(196, 85, 103, 0.08);
+        }
+
+        .picker-actions {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            margin-top: 32px;
+        }
+        .picker-actions .btn { width: auto; padding: 12px 32px; }
+
+        /* ========== ACCOUNT INFO ========== */
+        .account-info {
+            background: rgba(26, 10, 14, 0.5);
+            border: 1px solid rgba(196, 85, 103, 0.18);
+            border-radius: var(--radius);
+            padding: 16px 20px;
+            margin-bottom: 24px;
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+        .account-info strong { color: var(--white); }
+        .account-info .row { display: flex; justify-content: space-between; align-items: center; margin: 4px 0; }
+
+        .active-profile-banner {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            background: linear-gradient(135deg, rgba(123, 46, 58, 0.4), rgba(212, 168, 83, 0.15));
+            padding: 12px 20px;
+            border-radius: var(--radius);
+            margin-bottom: 24px;
+            font-size: 13px;
+        }
+        .active-profile-banner .mini-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--burgundy), var(--burgundy-light));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Playfair Display', serif;
+            font-weight: 700;
+            color: var(--white);
+        }
+
+        /* ========== LOADER ========== */
+        .loader {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-top-color: var(--white);
+            border-radius: 50%;
+            animation: spin 0.7s linear infinite;
+            margin-right: 8px;
+            vertical-align: middle;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        @media (max-width: 600px) {
+            .topbar { padding: 20px 24px; }
+            .card { padding: 32px 24px; }
+            .picker-header h1 { font-size: 36px; }
+            .avatar { width: 110px; height: 110px; font-size: 50px; }
+            .profiles-grid { gap: 20px; }
+        }
+    </style>
+</head>
+<body>
+    <header class="topbar">
+        <a href="index.html" class="logo">StreamZone</a>
+        <div class="topbar-actions">
+            <a href="index.html">← Acasă</a>
+        </div>
+    </header>
+
+    <main>
+        <!-- ============ LOGIN ============ -->
+        <section class="panel" id="panel-login">
+            <div class="card">
+                <h1>Autentificare</h1>
+                <p class="subtitle">Bun venit înapoi în StreamZone</p>
+                <div class="alert alert-error" id="login-alert"></div>
+                <form id="login-form">
+                    <div class="form-group">
+                        <label for="login-id">Email sau Username</label>
+                        <input type="text" id="login-id" required autocomplete="username">
+                    </div>
+                    <div class="form-group">
+                        <label for="login-password">Parolă</label>
+                        <input type="password" id="login-password" required autocomplete="current-password">
+                    </div>
+                    <button type="submit" class="btn" id="login-btn">Intră în cont</button>
+                </form>
+                <div class="form-footer">
+                    Nu ai cont? <a onclick="showPanel('register')">Creează unul</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============ REGISTER ============ -->
+        <section class="panel" id="panel-register">
+            <div class="card">
+                <h1>Cont nou</h1>
+                <p class="subtitle">Câteva detalii și ești gata să începi</p>
+                <div class="alert alert-error" id="register-alert"></div>
+                <div class="alert alert-success" id="register-success"></div>
+                <form id="register-form">
+                    <div class="form-group">
+                        <label for="reg-email">Email</label>
+                        <input type="email" id="reg-email" required autocomplete="email">
+                    </div>
+                    <div class="form-group">
+                        <label for="reg-username">Username</label>
+                        <input type="text" id="reg-username" required minlength="3" maxlength="50" autocomplete="username">
+                    </div>
+                    <div class="form-group">
+                        <label for="reg-password">Parolă (min. 6 caractere)</label>
+                        <input type="password" id="reg-password" required minlength="6" autocomplete="new-password">
+                    </div>
+                    <button type="submit" class="btn" id="register-btn">Creează cont</button>
+                </form>
+                <div class="form-footer">
+                    Ai deja cont? <a onclick="showPanel('login')">Autentifică-te</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============ PROFILE PICKER ============ -->
+        <section class="panel panel-wide" id="panel-picker">
+            <div class="picker-header">
+                <h1>Cine se uită?</h1>
+                <p id="picker-greeting">Alege profilul tău</p>
+            </div>
+            <div class="profiles-grid" id="profiles-grid"></div>
+            <div class="picker-actions">
+                <button class="btn btn-secondary" id="toggle-edit-btn" onclick="toggleEditMode()">Gestionează profile</button>
+                <button class="btn btn-secondary" onclick="logout()">Deconectare</button>
+            </div>
+        </section>
+
+        <!-- ============ CREATE PROFILE ============ -->
+        <section class="panel" id="panel-create-profile">
+            <div class="card">
+                <h1>Profil nou</h1>
+                <p class="subtitle">Câmpurile cu * sunt obligatorii</p>
+                <div class="alert alert-error" id="create-profile-alert"></div>
+                <form id="create-profile-form">
+                    <div class="form-group">
+                        <label for="cp-name">Nume profil *</label>
+                        <input type="text" id="cp-name" required maxlength="50">
+                    </div>
+                    <div class="form-group">
+                        <label for="cp-language">Limbă preferată</label>
+                        <select id="cp-language">
+                            <option value="ro">Română</option>
+                            <option value="ru">Русский</option>
+                            <option value="en">English</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="checkbox-row">
+                            <input type="checkbox" id="cp-kids">
+                            Profil pentru copii (filtre stricte)
+                        </label>
+                    </div>
+                    <button type="submit" class="btn" id="cp-btn">Creează profil</button>
+                </form>
+                <div class="form-footer">
+                    <a onclick="showPanel('picker')">← Înapoi</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============ ACTIVE / DASHBOARD ============ -->
+        <section class="panel" id="panel-dashboard">
+            <div class="card">
+                <h1 id="dash-greeting">Salut!</h1>
+                <p class="subtitle">Profil activ pe acest dispozitiv</p>
+
+                <div class="active-profile-banner">
+                    <div class="mini-avatar" id="dash-avatar">?</div>
+                    <div>
+                        <div><strong id="dash-profile-name">—</strong></div>
+                        <div style="color: var(--text-muted); font-size: 12px;" id="dash-profile-meta">—</div>
+                    </div>
+                </div>
+
+                <div class="account-info">
+                    <div class="row"><span>Cont</span> <strong id="dash-username">—</strong></div>
+                    <div class="row"><span>Email</span> <strong id="dash-email">—</strong></div>
+                    <div class="row"><span>UserId</span> <strong id="dash-userid">—</strong></div>
+                </div>
+
+                <button class="btn" onclick="goToContent()">Mergi la conținut</button>
+                <button class="btn btn-secondary" style="margin-top: 12px;" onclick="showPanel('picker')">Schimbă profil</button>
+                <button class="btn btn-danger" style="margin-top: 12px;" onclick="logout()">Deconectare completă</button>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        const API_BASE = '';
+        const STORAGE = {
+            userId: 'sz_userId',
+            username: 'sz_username',
+            email: 'sz_email',
+            accessToken: 'sz_accessToken',
+            refreshToken: 'sz_refreshToken',
+            activeProfileId: 'sz_activeProfileId',
+            activeProfileName: 'sz_activeProfileName',
+            activeProfileKids: 'sz_activeProfileKids'
+        };
+
+        let editMode = false;
+
+        // ── PANEL ROUTING ────────────────────────────────────────────────
+        function showPanel(name) {
+            document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+            document.getElementById('panel-' + name).classList.add('active');
+            clearAlerts();
+        }
+        function clearAlerts() {
+            document.querySelectorAll('.alert').forEach(a => a.classList.remove('show'));
+        }
+        function showAlert(id, msg, kind = 'error') {
+            const el = document.getElementById(id);
+            el.textContent = msg;
+            el.className = 'alert alert-' + kind + ' show';
+        }
+
+        // ── STATE HELPERS ────────────────────────────────────────────────
+        function isLoggedIn() { return !!localStorage.getItem(STORAGE.userId); }
+        function hasActiveProfile() { return !!localStorage.getItem(STORAGE.activeProfileId); }
+        function saveSession(data) {
+            localStorage.setItem(STORAGE.userId, data.userId);
+            localStorage.setItem(STORAGE.username, data.username);
+            localStorage.setItem(STORAGE.email, data.email || '');
+            if (data.accessToken) localStorage.setItem(STORAGE.accessToken, data.accessToken);
+            if (data.refreshToken) localStorage.setItem(STORAGE.refreshToken, data.refreshToken);
+        }
+        function clearSession() {
+            Object.values(STORAGE).forEach(k => localStorage.removeItem(k));
+        }
+        function setActiveProfile(p) {
+            localStorage.setItem(STORAGE.activeProfileId, p.profileId);
+            localStorage.setItem(STORAGE.activeProfileName, p.displayName);
+            localStorage.setItem(STORAGE.activeProfileKids, p.isKidsProfile ? '1' : '0');
+        }
+        function clearActiveProfile() {
+            localStorage.removeItem(STORAGE.activeProfileId);
+            localStorage.removeItem(STORAGE.activeProfileName);
+            localStorage.removeItem(STORAGE.activeProfileKids);
+        }
+
+        // ── INIT ─────────────────────────────────────────────────────────
+        function init() {
+            if (!isLoggedIn()) {
+                showPanel('login');
+                return;
+            }
+            if (!hasActiveProfile()) {
+                showProfilePicker();
+                return;
+            }
+            showDashboard();
+        }
+
+        // ── LOGIN ────────────────────────────────────────────────────────
+        document.getElementById('login-form').addEventListener('submit', async e => {
+            e.preventDefault();
+            const btn = document.getElementById('login-btn');
+            btn.disabled = true;
+            btn.innerHTML = '<span class="loader"></span>Se autentifică…';
+            try {
+                const res = await fetch(API_BASE + '/api/auth/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        emailOrUsername: document.getElementById('login-id').value.trim(),
+                        password: document.getElementById('login-password').value
+                    })
+                });
+                const data = await res.json();
+                if (!res.ok) throw new Error(data.error || 'Autentificare eșuată');
+                saveSession(data);
+                clearActiveProfile();
+                showProfilePicker(data.profiles);
+            } catch (err) {
+                showAlert('login-alert', err.message);
+            } finally {
+                btn.disabled = false;
+                btn.textContent = 'Intră în cont';
+            }
+        });
+
+        // ── REGISTER ─────────────────────────────────────────────────────
+        document.getElementById('register-form').addEventListener('submit', async e => {
+            e.preventDefault();
+            const btn = document.getElementById('register-btn');
+            btn.disabled = true;
+            btn.innerHTML = '<span class="loader"></span>Se creează contul…';
+            try {
+                const res = await fetch(API_BASE + '/api/auth/register', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        email: document.getElementById('reg-email').value.trim(),
+                        username: document.getElementById('reg-username').value.trim(),
+                        password: document.getElementById('reg-password').value
+                    })
+                });
+                const data = await res.json();
+                if (!res.ok) throw new Error(data.error || 'Înregistrare eșuată');
+                showAlert('register-success', 'Cont creat! Te logăm acum…', 'success');
+
+                // Auto-login după register
+                await new Promise(r => setTimeout(r, 600));
+                const loginRes = await fetch(API_BASE + '/api/auth/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        emailOrUsername: document.getElementById('reg-email').value.trim(),
+                        password: document.getElementById('reg-password').value
+                    })
+                });
+                const loginData = await loginRes.json();
+                if (!loginRes.ok) throw new Error(loginData.error || 'Login automat eșuat');
+                saveSession(loginData);
+                clearActiveProfile();
+                // Primul cont nu are profile — sărim direct la creare profil
+                showPanel('create-profile');
+            } catch (err) {
+                showAlert('register-alert', err.message);
+            } finally {
+                btn.disabled = false;
+                btn.textContent = 'Creează cont';
+            }
+        });
+
+        // ── PROFILE PICKER ───────────────────────────────────────────────
+        async function showProfilePicker(profilesFromLogin) {
+            const userId = localStorage.getItem(STORAGE.userId);
+            const username = localStorage.getItem(STORAGE.username);
+            document.getElementById('picker-greeting').textContent = `Bun venit, ${username}!`;
+
+            let profiles = profilesFromLogin;
+            if (!profiles) {
+                try {
+                    const res = await fetch(API_BASE + `/api/accounts/${userId}/profiles`);
+                    const data = await res.json();
+                    profiles = data.profiles || [];
+                } catch (e) {
+                    profiles = [];
+                }
+            }
+
+            const grid = document.getElementById('profiles-grid');
+            grid.innerHTML = '';
+
+            // Dacă nu există profile, du-te direct la creare
+            if (profiles.length === 0) {
+                showPanel('create-profile');
+                return;
+            }
+
+            profiles.forEach(p => {
+                const card = document.createElement('div');
+                card.className = 'profile-card';
+                const initial = (p.displayName || '?').charAt(0).toUpperCase();
+                card.innerHTML = `
+                    <div class="avatar ${p.isKidsProfile ? 'avatar-kids' : ''}">${initial}</div>
+                    <div class="profile-name">${escapeHtml(p.displayName)}</div>
+                    ${p.isKidsProfile ? '<span class="badge-kids">Kids</span>' : ''}
+                    <button class="delete-btn ${editMode ? 'editing' : ''}" data-id="${p.profileId}" title="Șterge profil">✕</button>
+                `;
+                card.querySelector('.delete-btn').addEventListener('click', e => {
+                    e.stopPropagation();
+                    deleteProfile(p.profileId, p.displayName);
+                });
+                card.addEventListener('click', () => {
+                    if (editMode) return;
+                    setActiveProfile(p);
+                    showDashboard();
+                });
+                grid.appendChild(card);
+            });
+
+            // Card "Adaugă profil" (max 5)
+            if (profiles.length < 5) {
+                const add = document.createElement('div');
+                add.className = 'add-profile';
+                add.innerHTML = `<div class="avatar">+</div><div class="profile-name">Adaugă profil</div>`;
+                add.addEventListener('click', () => showPanel('create-profile'));
+                grid.appendChild(add);
+            }
+
+            showPanel('picker');
+        }
+
+        function toggleEditMode() {
+            editMode = !editMode;
+            document.getElementById('toggle-edit-btn').textContent =
+                editMode ? 'Gata' : 'Gestionează profile';
+            document.querySelectorAll('.delete-btn').forEach(b => b.classList.toggle('editing', editMode));
+        }
+
+        async function deleteProfile(profileId, name) {
+            if (!confirm(`Ștergi profilul "${name}"? Această acțiune nu poate fi anulată.`)) return;
+            try {
+                const res = await fetch(API_BASE + `/api/profiles/${profileId}`, { method: 'DELETE' });
+                if (!res.ok) {
+                    const err = await res.json();
+                    throw new Error(err.error || 'Ștergere eșuată');
+                }
+                await showProfilePicker();
+            } catch (e) {
+                alert('Eroare: ' + e.message);
+            }
+        }
+
+        // ── CREATE PROFILE ───────────────────────────────────────────────
+        document.getElementById('create-profile-form').addEventListener('submit', async e => {
+            e.preventDefault();
+            const userId = localStorage.getItem(STORAGE.userId);
+            const btn = document.getElementById('cp-btn');
+            btn.disabled = true;
+            btn.innerHTML = '<span class="loader"></span>Se creează…';
+            try {
+                const res = await fetch(API_BASE + `/api/accounts/${userId}/profiles`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        displayName: document.getElementById('cp-name').value.trim(),
+                        isKidsProfile: document.getElementById('cp-kids').checked,
+                        preferredLanguage: document.getElementById('cp-language').value
+                    })
+                });
+                const data = await res.json();
+                if (!res.ok) throw new Error(data.error || 'Creare profil eșuată');
+                document.getElementById('create-profile-form').reset();
+                await showProfilePicker();
+            } catch (err) {
+                showAlert('create-profile-alert', err.message);
+            } finally {
+                btn.disabled = false;
+                btn.textContent = 'Creează profil';
+            }
+        });
+
+        // ── DASHBOARD ────────────────────────────────────────────────────
+        function showDashboard() {
+            const username = localStorage.getItem(STORAGE.username);
+            const email = localStorage.getItem(STORAGE.email);
+            const userId = localStorage.getItem(STORAGE.userId);
+            const profileName = localStorage.getItem(STORAGE.activeProfileName);
+            const isKids = localStorage.getItem(STORAGE.activeProfileKids) === '1';
+
+            document.getElementById('dash-greeting').textContent = `Salut, ${profileName}!`;
+            document.getElementById('dash-username').textContent = username;
+            document.getElementById('dash-email').textContent = email || '—';
+            document.getElementById('dash-userid').textContent = userId;
+            document.getElementById('dash-profile-name').textContent = profileName;
+            document.getElementById('dash-profile-meta').textContent =
+                isKids ? 'Profil pentru copii' : 'Profil standard';
+            document.getElementById('dash-avatar').textContent =
+                (profileName || '?').charAt(0).toUpperCase();
+            if (isKids) document.getElementById('dash-avatar').style.background =
+                'linear-gradient(135deg, var(--gold), #b8893f)';
+
+            showPanel('dashboard');
+        }
+
+        function goToContent() {
+            window.location.href = 'index.html';
+        }
+
+        // ── LOGOUT ───────────────────────────────────────────────────────
+        async function logout() {
+            const refreshToken = localStorage.getItem(STORAGE.refreshToken);
+            if (refreshToken) {
+                try {
+                    await fetch(API_BASE + '/api/auth/logout', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ refreshToken })
+                    });
+                } catch (_) { /* ignore */ }
+            }
+            clearSession();
+            showPanel('login');
+        }
+
+        // ── UTILS ────────────────────────────────────────────────────────
+        function escapeHtml(s) {
+            return String(s).replace(/[&<>"']/g, c => ({
+                '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+            }[c]));
+        }
+
+        // ── BOOT ─────────────────────────────────────────────────────────
+        init();
+    </script>
+</body>
+</html>

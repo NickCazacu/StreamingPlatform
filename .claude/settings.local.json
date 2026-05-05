@@ -2,7 +2,11 @@
   "permissions": {
     "allow": [
       "Bash(find . -maxdepth 2 -type f -not -path */bin/* -not -path */obj/*)",
-      "Bash(grep:*)"
+      "Bash(grep:*)",
+      "Bash(dotnet build:*)",
+      "Bash(taskkill //F //FI \"WINDOWTITLE eq StreamingPlatform*\")",
+      "Bash(taskkill //F //IM StreamingPlatform.exe)",
+      "Bash(Select-Object Name,Mode)"
     ]
   }
 }

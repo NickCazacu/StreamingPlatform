@@ -605,6 +605,265 @@
             to { transform: rotate(360deg); }
         }
 
+        /* ========== STREAMING TECH SECTION (Flyweight + Bridge) ========== */
+        .streaming-section {
+            margin-top: 40px;
+            padding-top: 40px;
+            border-top: 1px solid rgba(123, 46, 58, 0.15);
+        }
+
+        .streaming-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .streaming-title .accent { color: var(--burgundy-accent); }
+
+        .streaming-subtitle {
+            color: var(--text-muted);
+            font-size: 14px;
+            margin-bottom: 28px;
+            letter-spacing: 0.5px;
+        }
+
+        .tech-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+            margin-bottom: 32px;
+        }
+
+        .tech-card {
+            background: var(--bg-card);
+            border: 1px solid rgba(123, 46, 58, 0.15);
+            border-radius: var(--radius);
+            padding: 24px;
+            transition: var(--transition);
+        }
+
+        .tech-card:hover {
+            border-color: rgba(196, 85, 103, 0.3);
+        }
+
+        .tech-card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 6px;
+        }
+
+        .tech-card-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 19px;
+            font-weight: 700;
+            color: var(--white);
+        }
+
+        .tech-card-pattern {
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            padding: 4px 10px;
+            border-radius: 20px;
+            background: rgba(212, 168, 83, 0.12);
+            border: 1px solid rgba(212, 168, 83, 0.3);
+            color: var(--gold);
+        }
+
+        .tech-card-desc {
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-bottom: 18px;
+            line-height: 1.6;
+        }
+
+        .selector-row {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 18px;
+        }
+
+        .selector-btn {
+            background: rgba(123, 46, 58, 0.15);
+            border: 1px solid rgba(160, 64, 77, 0.25);
+            color: var(--white-soft);
+            padding: 10px 18px;
+            border-radius: 24px;
+            font-family: 'Raleway', sans-serif;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .selector-btn:hover {
+            background: rgba(123, 46, 58, 0.3);
+            border-color: var(--burgundy-accent);
+            color: var(--white);
+            transform: translateY(-1px);
+        }
+
+        .selector-btn.active {
+            background: linear-gradient(135deg, var(--burgundy), var(--burgundy-light));
+            border-color: var(--burgundy-accent);
+            color: var(--white);
+            box-shadow: 0 4px 14px rgba(123, 46, 58, 0.35);
+        }
+
+        .tech-info {
+            background: rgba(26, 10, 14, 0.5);
+            border: 1px solid rgba(123, 46, 58, 0.1);
+            border-radius: var(--radius-sm);
+            padding: 14px 18px;
+            font-size: 13px;
+            color: var(--white-soft);
+            line-height: 1.7;
+            min-height: 100px;
+        }
+
+        .tech-info b { color: var(--gold); }
+        .tech-info .label { color: var(--text-dim); font-size: 11px; letter-spacing: 1.2px; text-transform: uppercase; }
+        .tech-info .row { display: flex; justify-content: space-between; padding: 4px 0; }
+
+        .cache-hit-banner {
+            margin-top: 12px;
+            padding: 10px 14px;
+            border-radius: var(--radius-sm);
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: 0.3px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            animation: fadeInUp 0.4s ease;
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .cache-hit-banner.shared {
+            background: rgba(212, 168, 83, 0.12);
+            border: 1px solid rgba(212, 168, 83, 0.4);
+            color: var(--gold);
+        }
+
+        .cache-hit-banner.new {
+            background: rgba(123, 46, 58, 0.18);
+            border: 1px solid rgba(160, 64, 77, 0.4);
+            color: var(--burgundy-accent);
+        }
+
+        /* Active sessions panel */
+        .sessions-panel {
+            background: var(--bg-card);
+            border: 1px solid rgba(123, 46, 58, 0.15);
+            border-radius: var(--radius);
+            padding: 24px;
+        }
+
+        .sessions-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .sessions-stats {
+            display: flex;
+            gap: 24px;
+            flex-wrap: wrap;
+        }
+
+        .stat-pill {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        .stat-pill b {
+            color: var(--gold);
+            font-family: 'Playfair Display', serif;
+            font-size: 16px;
+            font-weight: 700;
+        }
+
+        .sessions-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .session-item {
+            display: grid;
+            grid-template-columns: 1fr auto auto;
+            gap: 14px;
+            align-items: center;
+            padding: 12px 16px;
+            background: rgba(26, 10, 14, 0.5);
+            border-radius: var(--radius-sm);
+            border-left: 3px solid transparent;
+            transition: var(--transition);
+            font-size: 13px;
+        }
+
+        .session-item.you {
+            border-left-color: var(--gold);
+            background: rgba(212, 168, 83, 0.06);
+        }
+
+        .session-item.same-quality {
+            border-left-color: var(--burgundy-accent);
+        }
+
+        .session-user {
+            color: var(--white);
+            font-weight: 600;
+        }
+
+        .session-content {
+            color: var(--text-muted);
+            font-size: 12px;
+        }
+
+        .session-quality-badge {
+            background: rgba(123, 46, 58, 0.3);
+            border: 1px solid rgba(160, 64, 77, 0.3);
+            color: var(--gold);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+
+        .session-device {
+            color: var(--text-dim);
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .empty-sessions {
+            color: var(--text-dim);
+            text-align: center;
+            padding: 24px;
+            font-size: 13px;
+            font-style: italic;
+        }
+
         /* ========== RESPONSIVE ========== */
         @media (max-width: 768px) {
             .navbar { padding: 0 20px; }
@@ -614,6 +873,8 @@
             .ratings-grid { grid-template-columns: 1fr; }
             .related-grid { grid-template-columns: repeat(2, 1fr); }
             .movie-meta-grid { grid-template-columns: 1fr 1fr; }
+            .tech-grid { grid-template-columns: 1fr; }
+            .session-item { grid-template-columns: 1fr; gap: 6px; }
         }
    .player-cover {
     position: absolute;
@@ -966,6 +1227,71 @@
                         </div>
                     </div>
 
+                    <!-- ========== STREAMING TECH (Flyweight + Bridge) ========== -->
+                    <div class="streaming-section">
+                        <h3 class="streaming-title">Detalii <span class="accent">Streaming</span></h3>
+                        <p class="streaming-subtitle">Configurează dispozitivul și calitatea streamului — în culise rulează pattern-urile Bridge și Flyweight</p>
+
+                        <div class="tech-grid">
+                            <!-- BRIDGE: Device selector -->
+                            <div class="tech-card">
+                                <div class="tech-card-header">
+                                    <h4 class="tech-card-title">Dispozitiv</h4>
+                                    <span class="tech-card-pattern">Bridge</span>
+                                </div>
+                                <p class="tech-card-desc">Schimbă dispozitivul la runtime — abstracția (player) rămâne aceeași, doar implementarea (rendererul) se înlocuiește.</p>
+                                <div class="selector-row" id="device-selector">
+                                    <button class="selector-btn active" data-device="desktop">🖥 Desktop</button>
+                                    <button class="selector-btn" data-device="smarttv">📺 Smart TV</button>
+                                    <button class="selector-btn" data-device="mobile">📱 Mobile</button>
+                                    <button class="selector-btn" data-device="tablet">⬜ Tabletă</button>
+                                </div>
+                                <div class="tech-info" id="bridge-info">
+                                    <span class="label">Se încarcă...</span>
+                                </div>
+                            </div>
+
+                            <!-- FLYWEIGHT: Quality selector -->
+                            <div class="tech-card">
+                                <div class="tech-card-header">
+                                    <h4 class="tech-card-title">Calitate Stream</h4>
+                                    <span class="tech-card-pattern">Flyweight</span>
+                                </div>
+                                <p class="tech-card-desc">Toate sesiunile cu aceeași rezoluție partajează un SINGUR obiect StreamQuality din pool — zero duplicare în memorie.</p>
+                                <div class="selector-row" id="quality-selector">
+                                    <button class="selector-btn" data-quality="360p">360p</button>
+                                    <button class="selector-btn" data-quality="480p">480p</button>
+                                    <button class="selector-btn" data-quality="720p">720p</button>
+                                    <button class="selector-btn active" data-quality="1080p">1080p</button>
+                                    <button class="selector-btn" data-quality="4K">4K</button>
+                                    <button class="selector-btn" data-quality="4KUHD">4K UHD</button>
+                                </div>
+                                <div class="tech-info" id="flyweight-info">
+                                    <span class="label">Se încarcă...</span>
+                                </div>
+                                <div id="cache-hit-banner"></div>
+                            </div>
+                        </div>
+
+                        <!-- Active sessions panel -->
+                        <div class="sessions-panel">
+                            <div class="sessions-header">
+                                <div>
+                                    <h4 class="tech-card-title">Sesiuni Active pe Platformă</h4>
+                                    <p style="color: var(--text-muted); font-size: 12px; margin-top: 4px;">Sesiuni cu aceeași calitate folosesc același obiect StreamQuality din pool</p>
+                                </div>
+                                <div class="sessions-stats" id="sessions-stats">
+                                    <span class="stat-pill">Pool: <b id="stat-pool">—</b></span>
+                                    <span class="stat-pill">Sesiuni: <b id="stat-sessions">—</b></span>
+                                    <span class="stat-pill">Cache hits: <b id="stat-hits">—</b></span>
+                                </div>
+                            </div>
+                            <div class="sessions-list" id="sessions-list">
+                                <div class="empty-sessions">Se încarcă sesiunile active...</div>
+                            </div>
+                        </div>
+                    </div>
+
                     <!-- Related content -->
                     <div class="related-section">
                         <h3 class="ratings-title">Conținut <span class="accent">Similar</span></h3>
@@ -987,10 +1313,162 @@
                     </a>
                 `).join('');
 
+                // ========== INIT BRIDGE + FLYWEIGHT ==========
+                initStreamingTech();
+
             } catch (e) {
                 document.getElementById('movie-info').innerHTML =
                     '<div style="padding:40px;color:#c45567;">❌ API nu e pornit. Rulează: dotnet run</div>';
             }
+        }
+
+        // ============================================================
+        // BRIDGE + FLYWEIGHT INTEGRATION
+        // ============================================================
+
+        // Stare locală pentru sesiunea curentă (nu persistată — se resetează la refresh)
+        const VIEWER_NAME = 'Vizitator-' + Math.floor(Math.random() * 9000 + 1000);
+        let currentDevice = 'desktop';
+        let currentQuality = '1080p';
+
+        async function initStreamingTech() {
+            // Wire up device buttons
+            document.querySelectorAll('#device-selector .selector-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    document.querySelectorAll('#device-selector .selector-btn').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    currentDevice = btn.dataset.device;
+                    callBridge();
+                });
+            });
+
+            // Wire up quality buttons
+            document.querySelectorAll('#quality-selector .selector-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    document.querySelectorAll('#quality-selector .selector-btn').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    currentQuality = btn.dataset.quality;
+                    createFlyweightSession();
+                });
+            });
+
+            // Apel inițial — pornim sesiunea curentă
+            await callBridge();
+            await createFlyweightSession();
+        }
+
+        async function callBridge() {
+            try {
+                const res = await fetch(`${API}/bridge/play`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        playerType: 'video',
+                        device: currentDevice,
+                        contentTitle: movieTitle,
+                        quality: currentQuality
+                    })
+                });
+                const data = await res.json();
+
+                document.getElementById('bridge-info').innerHTML = `
+                    <div class="row"><span class="label">Player</span><span><b>${data.player}</b></span></div>
+                    <div class="row"><span class="label">Device</span><span><b>${data.device}</b></span></div>
+                    <div class="row"><span class="label">Capabilități</span><span style="font-size: 12px; color: var(--text-muted); text-align: right;">${(data.deviceCapabilities || '').split('|').slice(0,2).join(' |')}</span></div>
+                    <div class="row" style="border-top: 1px solid rgba(123,46,58,0.1); margin-top: 6px; padding-top: 8px;">
+                        <span style="font-size: 11px; color: var(--burgundy-accent); font-style: italic;">${data.bridgeCall}</span>
+                    </div>
+                `;
+            } catch (e) {
+                document.getElementById('bridge-info').innerHTML =
+                    '<span style="color: var(--burgundy-accent);">❌ Bridge API indisponibil</span>';
+            }
+        }
+
+        async function createFlyweightSession() {
+            try {
+                const res = await fetch(`${API}/flyweight/sessions`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        userName: VIEWER_NAME,
+                        contentTitle: movieTitle,
+                        device: capitalizeDevice(currentDevice),
+                        quality: currentQuality
+                    })
+                });
+                const data = await res.json();
+
+                if (!data.flyweightInfo) return;
+
+                const fw = data.flyweightInfo;
+                const sess = data.session;
+
+                document.getElementById('flyweight-info').innerHTML = `
+                    <div class="row"><span class="label">Rezoluție</span><span><b>${sess.quality}</b></span></div>
+                    <div class="row"><span class="label">Detalii</span><span style="font-size: 12px; color: var(--text-muted); text-align: right;">${sess.qualityDetails}</span></div>
+                    <div class="row"><span class="label">Pool size</span><span><b>${fw.poolSize}</b> obiecte unice</span></div>
+                `;
+
+                // Cache hit banner
+                const banner = document.getElementById('cache-hit-banner');
+                if (fw.cacheHit) {
+                    const sharedList = fw.sharedWith && fw.sharedWith.length > 0
+                        ? ` cu: <b>${fw.sharedWith.join(', ')}</b>`
+                        : '';
+                    banner.className = 'cache-hit-banner shared';
+                    banner.innerHTML = `♻ Obiect <b>${sess.quality}</b> partajat din pool${sharedList} — zero alocare nouă!`;
+                } else {
+                    banner.className = 'cache-hit-banner new';
+                    banner.innerHTML = `✨ Obiect <b>${sess.quality}</b> creat și adăugat în pool (prima sesiune cu această calitate)`;
+                }
+
+                // Refresh sessions panel
+                await loadSessions();
+            } catch (e) {
+                document.getElementById('flyweight-info').innerHTML =
+                    '<span style="color: var(--burgundy-accent);">❌ Flyweight API indisponibil</span>';
+            }
+        }
+
+        async function loadSessions() {
+            try {
+                const res = await fetch(`${API}/flyweight/sessions`);
+                const data = await res.json();
+
+                document.getElementById('stat-pool').textContent = data.poolStats.poolSize;
+                document.getElementById('stat-sessions').textContent = data.sessions.length;
+                document.getElementById('stat-hits').textContent = data.poolStats.cacheHits;
+
+                const list = document.getElementById('sessions-list');
+                if (!data.sessions.length) {
+                    list.innerHTML = '<div class="empty-sessions">Nicio sesiune activă încă.</div>';
+                    return;
+                }
+
+                list.innerHTML = data.sessions.map(s => {
+                    const isYou = s.userName === VIEWER_NAME;
+                    const sameQuality = s.quality === currentQuality;
+                    const cls = isYou ? 'you' : (sameQuality ? 'same-quality' : '');
+                    return `
+                        <div class="session-item ${cls}">
+                            <div>
+                                <div class="session-user">${isYou ? '⭐ Tu' : '👤 ' + s.userName}</div>
+                                <div class="session-content">${s.contentTitle} • ${s.startedAt}</div>
+                            </div>
+                            <span class="session-device">${s.device}</span>
+                            <span class="session-quality-badge">${s.quality}</span>
+                        </div>
+                    `;
+                }).join('');
+            } catch (e) {
+                console.error('Sessions load error:', e);
+            }
+        }
+
+        function capitalizeDevice(d) {
+            const map = { desktop: 'Desktop', smarttv: 'Smart TV', mobile: 'Mobile', tablet: 'Tabletă' };
+            return map[d] || d;
         }
 
         loadMovieInfo();
