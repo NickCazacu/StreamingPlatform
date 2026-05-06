@@ -30,19 +30,7 @@ namespace StreamingPlatform
         {
             Console.OutputEncoding = System.Text.Encoding.UTF8;
 
-            // Încarcă datele (filme, seriale, documentare)
-            ApiEndpoints.LoadData();
-            DemoFlyweight();
-            DemoDecorator();
-            DemoBridge();
-            DemoProxy();
-            DemoStrategy();
-            DemoObserver();
-            DemoCommand();
-            DemoMemento();
-            DemoIterator();
-
-            // Creăm web server-ul
+            // Creăm web server-ul mai întâi — avem nevoie de DbContext pentru LoadData
             var builder = WebApplication.CreateBuilder(args);
 
             // ── Conectare bază de date StreamZoneDB (SQL Server) ─────────────
@@ -52,24 +40,50 @@ namespace StreamingPlatform
                 options.UseSqlServer(connectionString));
             builder.Services.AddScoped<AuthService>();
 
+            // ── Email service (real SMTP dacă e configurat, altfel mock) ─────
+            var emailProvider = builder.Configuration["Email:Provider"] ?? "Mock";
+            var smtpUser = builder.Configuration["Email:Smtp:Username"];
+            if (emailProvider == "Smtp" && !string.IsNullOrWhiteSpace(smtpUser))
+                builder.Services.AddSingleton<StreamingPlatform.Services.IEmailService, StreamingPlatform.Services.SmtpEmailService>();
+            else
+                builder.Services.AddSingleton<StreamingPlatform.Services.IEmailService, StreamingPlatform.Services.MockEmailService>();
+
             var app = builder.Build();
 
-            // ── Verificare conectare DB la pornire ───────────────────────────
+            // ── Verificare conectare DB + încărcare conținut (hibrid: BD ↔ hardcoded) ─
             using (var scope = app.Services.CreateScope())
             {
                 var db = scope.ServiceProvider.GetRequiredService<StreamZoneDbContext>();
                 try
                 {
                     if (db.Database.CanConnect())
+                    {
                         Console.WriteLine("  ✅ Bază de date StreamZoneDB conectată.");
+                        ApiEndpoints.LoadData(db); // citește din BD sau seedează BD
+                    }
                     else
-                        Console.WriteLine("  ⚠ Nu se poate conecta la StreamZoneDB — verifică connection string.");
+                    {
+                        Console.WriteLine("  ⚠ Nu se poate conecta la StreamZoneDB — folosesc date hardcoded.");
+                        ApiEndpoints.LoadData(null);
+                    }
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine($"  ⚠ Eroare conexiune DB: {ex.Message}");
+                    Console.WriteLine($"  ⚠ Eroare conexiune DB: {ex.Message} — folosesc date hardcoded.");
+                    ApiEndpoints.LoadData(null);
                 }
             }
+
+            // ── Demo-uri pattern-uri (folosesc listele in-memory populate de LoadData) ─
+            DemoFlyweight();
+            DemoDecorator();
+            DemoBridge();
+            DemoProxy();
+            DemoStrategy();
+            DemoObserver();
+            DemoCommand();
+            DemoMemento();
+            DemoIterator();
 
             // Servește fișierele statice din folderul UI/
             var uiPath = Path.Combine(Directory.GetCurrentDirectory(), "UI");
@@ -93,6 +107,7 @@ namespace StreamingPlatform
             // Înregistrează endpoint-urile API
             ApiEndpoints.MapEndpoints(app);
             AuthEndpoints.MapAuthEndpoints(app);
+            AccountEndpoints.MapAccountEndpoints(app);
 
             // Redirecționează "/" către index.html
             app.MapGet("/", (HttpContext context) =>

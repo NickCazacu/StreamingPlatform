@@ -3,11 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using StreamingPlatform.Models;
+using StreamingPlatform.Models.Db;
+using StreamZoneDbContext = StreamingPlatform.Auth.StreamZoneDbContext;
 using StreamingPlatform.Builders;
 using StreamingPlatform.Adapters;
 using StreamingPlatform.Services;
 using StreamingPlatform.Proxy;
+// IEmailService e în StreamingPlatform.Services — deja inclus
 using StreamingPlatform.Flyweight;
 using StreamingPlatform.Decorator;
 using StreamingPlatform.Bridge;
@@ -59,9 +63,169 @@ namespace StreamingPlatform.Api
         }
 
         /// <summary>
-        /// Încarcă datele inițiale (filmele, serialele, documentarele din proiect).
+        /// Încarcă datele inițiale: dacă BD are deja conținut, citește de acolo;
+        /// dacă BD e goală, rulează seed-ul hardcoded (Builder/Factory) și salvează în BD.
+        /// Dacă db == null, funcționează doar în memorie (fallback).
         /// </summary>
-        public static void LoadData()
+        public static void LoadData(StreamZoneDbContext? db = null)
+        {
+            // ── Path 1: BD disponibilă și are deja date → încarcă de acolo ──
+            if (db != null)
+            {
+                try
+                {
+                    if (db.Movies.Any() || db.SeriesItems.Any() || db.Documentaries.Any())
+                    {
+                        LoadFromDatabase(db);
+                        PlatformManager.Instance.Log("API: Date încărcate din StreamZoneDB.");
+                        Console.WriteLine($"  ✅ Date încărcate din BD: {_movies.Count} filme, {_series.Count} seriale, {_documentaries.Count} documentare.");
+                        return;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"  ⚠ Eroare la citire BD: {ex.Message}. Folosesc date hardcoded.");
+                }
+            }
+
+            // ── Path 2: BD goală sau indisponibilă → rulează seed hardcoded ─
+            LoadFromHardcoded();
+
+            // ── Path 3: dacă BD e disponibilă, salvează seed-ul în BD ───────
+            if (db != null)
+            {
+                try
+                {
+                    SaveToDatabase(db);
+                    Console.WriteLine($"  ✅ Seed salvat în BD: {_movies.Count} filme, {_series.Count} seriale, {_documentaries.Count} documentare.");
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"  ⚠ Seed în BD a eșuat: {ex.Message}");
+                }
+            }
+        }
+
+        /// <summary>Citește din BD în listele in-memory (_movies/_series/_documentaries).</summary>
+        private static void LoadFromDatabase(StreamZoneDbContext db)
+        {
+            _movies.Clear();
+            _series.Clear();
+            _documentaries.Clear();
+
+            foreach (var m in db.Movies.AsNoTracking().ToList())
+            {
+                var movie = new Movie(m.Title, m.Description,
+                    ParseGenre(m.Genre), ParseRating(m.ContentRating),
+                    m.DurationMinutes, m.Director);
+                if (m.AverageRating >= 1) movie.AddRating((double)m.AverageRating);
+                _movies.Add(movie);
+            }
+
+            foreach (var s in db.SeriesItems.AsNoTracking().ToList())
+            {
+                var series = new Series(s.Title, s.Description,
+                    ParseGenre(s.Genre), ParseRating(s.ContentRating),
+                    s.Creator, s.SeasonsCount, s.EpisodesCount, s.EpisodeDuration);
+                series.IsCompleted = s.IsCompleted;
+                if (s.AverageRating >= 1) series.AddRating((double)s.AverageRating);
+                _series.Add(series);
+            }
+
+            foreach (var d in db.Documentaries.AsNoTracking().ToList())
+            {
+                var doc = new Documentary(d.Title, d.Description,
+                    ParseGenre(d.Genre), ParseRating(d.ContentRating),
+                    d.DurationMinutes, d.Topic, d.Narrator);
+                doc.IsEducational = d.IsEducational;
+                if (d.AverageRating >= 1) doc.AddRating((double)d.AverageRating);
+                _documentaries.Add(doc);
+            }
+
+            // Rating Aggregator (Adapter Pattern) — la fel ca în varianta hardcoded
+            _ratingAggregator.AddService(new ImdbAdapter(new ImdbService()));
+            _ratingAggregator.AddService(new RottenTomatoesAdapter(new RottenTomatoesService()));
+            _ratingAggregator.AddService(new MetacriticAdapter(new MetacriticService()));
+        }
+
+        /// <summary>Salvează listele in-memory în BD (folosit la primul rul-up).</summary>
+        private static void SaveToDatabase(StreamZoneDbContext db)
+        {
+            // Lista titlurilor MOLDOVENEȘTI (hardcoded — corespunde cu LoadFromHardcoded).
+            var moldovanMovies = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
+            {
+                "Carbon", "Hotarul", "Abis", "Puterea Probabilitatii", "Lăutarii",
+                "Maria Mirabela", "Nunta în Basarabia", "Tatăl meu, dictatorul",
+                "Ce lume minunată", "La limita de jos a cerului", "Dimitrie Cantemir", "Codru"
+            };
+            var moldovanSeries = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
+            {
+                "Plaha", "Cumpenele Familiei"
+            };
+            var moldovanDocs = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
+            {
+                "Moldova: Inima de Vin", "Chișinău — Memorii", "Codrii Moldovei",
+                "Ștefan cel Mare — Legenda Moldovei", "Mănăstirile Basarabiei"
+            };
+
+            foreach (var m in _movies)
+            {
+                db.Movies.Add(new MovieEntity
+                {
+                    Title = m.Title,
+                    Description = m.Description,
+                    Genre = m.Genre.ToString(),
+                    ContentRating = m.Rating.ToString(),
+                    DurationMinutes = m.DurationMinutes,
+                    Director = m.Director,
+                    AverageRating = (decimal)m.AverageRating,
+                    IsMoldovan = moldovanMovies.Contains(m.Title)
+                });
+            }
+            foreach (var s in _series)
+            {
+                db.SeriesItems.Add(new SeriesEntity
+                {
+                    Title = s.Title,
+                    Description = s.Description,
+                    Genre = s.Genre.ToString(),
+                    ContentRating = s.Rating.ToString(),
+                    Creator = s.Creator,
+                    SeasonsCount = s.SeasonsCount,
+                    EpisodesCount = s.EpisodesCount,
+                    EpisodeDuration = s.AverageEpisodeDuration,
+                    IsCompleted = s.IsCompleted,
+                    AverageRating = (decimal)s.AverageRating,
+                    IsMoldovan = moldovanSeries.Contains(s.Title)
+                });
+            }
+            foreach (var d in _documentaries)
+            {
+                db.Documentaries.Add(new DocumentaryEntity
+                {
+                    Title = d.Title,
+                    Description = d.Description,
+                    Genre = d.Genre.ToString(),
+                    ContentRating = d.Rating.ToString(),
+                    DurationMinutes = d.DurationMinutes,
+                    Topic = d.Topic,
+                    Narrator = d.Narrator,
+                    IsEducational = d.IsEducational,
+                    AverageRating = (decimal)d.AverageRating,
+                    IsMoldovan = moldovanDocs.Contains(d.Title)
+                });
+            }
+            db.SaveChanges();
+        }
+
+        private static Genre ParseGenre(string s) =>
+            Enum.TryParse<Genre>(s, true, out var g) ? g : Genre.Drama;
+
+        private static ContentRating ParseRating(string s) =>
+            Enum.TryParse<ContentRating>(s, true, out var r) ? r : ContentRating.PG;
+
+        /// <summary>Codul existent — păstrează demo-ul Builder/Factory pentru profesor.</summary>
+        public static void LoadFromHardcoded()
         {
             // ── Filme moldovenești ──────────────────────────────────────────────
             var movie1 = new Movie("Carbon", "Un tânăr inginer descoperă că fabrica unde lucrează ascunde secrete toxice periculoase. O dramă contemporană din nordul Moldovei.",
@@ -495,37 +659,74 @@ namespace StreamingPlatform.Api
                 };
             });
 
-            // --- CĂUTARE ---
-            app.MapGet("/api/search", (string? q, string? genre) =>
+            // --- CĂUTARE (interogă BD direct — vede orice rând adăugat în SSMS) ---
+            app.MapGet("/api/search", async (string? q, string? genre, bool? moldovanOnly, StreamZoneDbContext db) =>
             {
-                var results = new List<object>();
-
-                var movies = _movies.AsEnumerable();
-                var series = _series.AsEnumerable();
-                var docs = _documentaries.AsEnumerable();
+                IQueryable<MovieEntity> movies = db.Movies.AsNoTracking();
+                IQueryable<SeriesEntity> series = db.SeriesItems.AsNoTracking();
+                IQueryable<DocumentaryEntity> docs = db.Documentaries.AsNoTracking();
 
                 if (!string.IsNullOrEmpty(q))
                 {
-                    movies = movies.Where(m => m.Title.Contains(q, StringComparison.OrdinalIgnoreCase));
-                    series = series.Where(s => s.Title.Contains(q, StringComparison.OrdinalIgnoreCase));
-                    docs = docs.Where(d => d.Title.Contains(q, StringComparison.OrdinalIgnoreCase));
+                    movies = movies.Where(m => m.Title.Contains(q) || m.Description.Contains(q) || m.Director.Contains(q));
+                    series = series.Where(s => s.Title.Contains(q) || s.Description.Contains(q) || s.Creator.Contains(q));
+                    docs   = docs  .Where(d => d.Title.Contains(q) || d.Description.Contains(q) || d.Narrator.Contains(q));
                 }
 
                 if (!string.IsNullOrEmpty(genre))
                 {
-                    if (Enum.TryParse<Genre>(genre, true, out var g))
-                    {
-                        movies = movies.Where(m => m.Genre == g);
-                        series = series.Where(s => s.Genre == g);
-                        docs = docs.Where(d => d.Genre == g);
-                    }
+                    movies = movies.Where(m => m.Genre == genre);
+                    series = series.Where(s => s.Genre == genre);
+                    docs   = docs  .Where(d => d.Genre == genre);
                 }
 
-                results.AddRange(movies.Select(m => new { m.Id, m.Title, m.Description, Genre = m.Genre.ToString(), Type = "Movie" }));
-                results.AddRange(series.Select(s => new { s.Id, s.Title, s.Description, Genre = s.Genre.ToString(), Type = "Series" }));
-                results.AddRange(docs.Select(d => new { d.Id, d.Title, d.Description, Genre = d.Genre.ToString(), Type = "Documentary" }));
+                if (moldovanOnly == true)
+                {
+                    movies = movies.Where(m => m.IsMoldovan);
+                    series = series.Where(s => s.IsMoldovan);
+                    docs   = docs  .Where(d => d.IsMoldovan);
+                }
 
-                return results;
+                var movieList  = await movies.ToListAsync();
+                var seriesList = await series.ToListAsync();
+                var docsList   = await docs.ToListAsync();
+
+                var results = new List<object>();
+                results.AddRange(movieList.Select(m => new
+                {
+                    id = m.MovieId, title = m.Title, description = m.Description,
+                    genre = m.Genre, contentRating = m.ContentRating,
+                    duration = m.DurationMinutes, director = m.Director,
+                    averageRating = m.AverageRating, isMoldovan = m.IsMoldovan,
+                    posterUrl = m.PosterUrl, type = "Movie"
+                }));
+                results.AddRange(seriesList.Select(s => new
+                {
+                    id = s.SeriesId, title = s.Title, description = s.Description,
+                    genre = s.Genre, contentRating = s.ContentRating,
+                    duration = s.SeasonsCount * s.EpisodesCount * s.EpisodeDuration,
+                    director = s.Creator,
+                    averageRating = s.AverageRating, isMoldovan = s.IsMoldovan,
+                    posterUrl = s.PosterUrl, type = "Series"
+                }));
+                results.AddRange(docsList.Select(d => new
+                {
+                    id = d.DocumentaryId, title = d.Title, description = d.Description,
+                    genre = d.Genre, contentRating = d.ContentRating,
+                    duration = d.DurationMinutes, director = d.Narrator,
+                    averageRating = d.AverageRating, isMoldovan = d.IsMoldovan,
+                    posterUrl = d.PosterUrl, type = "Documentary"
+                }));
+
+                return Results.Ok(new
+                {
+                    query = q,
+                    genre,
+                    moldovanOnly = moldovanOnly == true,
+                    totalResults = results.Count,
+                    source = "StreamZoneDB",
+                    results
+                });
             });
 
             // --- PLAY (incrementează vizualizări) ---
@@ -971,10 +1172,15 @@ namespace StreamingPlatform.Api
                     _contentPublisher.Subscribe(obs);
                 }
 
+                // Stocăm email-ul pentru notificări reale (dacă a fost trimis)
+                if (!string.IsNullOrWhiteSpace(body.Email))
+                    _observerEmails[body.UserName] = body.Email.Trim();
+
                 return Results.Ok(new
                 {
                     message = $"'{body.UserName}' s-a abonat la notificări.",
-                    observerCount = _contentPublisher.ObserverCount
+                    observerCount = _contentPublisher.ObserverCount,
+                    emailRegistered = _observerEmails.ContainsKey(body.UserName)
                 });
             });
 
@@ -989,13 +1195,14 @@ namespace StreamingPlatform.Api
                 {
                     _contentPublisher.Unsubscribe(obs);
                     _observersByUser.Remove(body.UserName);
+                    _observerEmails.Remove(body.UserName);
                     return Results.Ok(new { message = $"'{body.UserName}' s-a dezabonat.", observerCount = _contentPublisher.ObserverCount });
                 }
                 return Results.BadRequest(new { error = $"'{body.UserName}' nu era abonat." });
             });
 
-            // POST /api/observer/publish — simulează adăugare conținut nou
-            app.MapPost("/api/observer/publish", async (HttpContext ctx) =>
+            // POST /api/observer/publish — simulează adăugare conținut nou + trimite email REAL
+            app.MapPost("/api/observer/publish", async (HttpContext ctx, IEmailService emailService) =>
             {
                 var body = await ctx.Request.ReadFromJsonAsync<ObserverPublishRequest>();
                 if (body == null || string.IsNullOrWhiteSpace(body.Title))
@@ -1011,10 +1218,35 @@ namespace StreamingPlatform.Api
 
                 PlatformManager.Instance.Log($"[Observer API] Conținut publicat: {body.Title}");
 
+                // ── Trimitere email REAL la fiecare abonat care are email salvat ─
+                int emailsSent = 0, emailsFailed = 0;
+                var recipients = new List<string>();
+
+                if (_observerEmails.Count > 0)
+                {
+                    var subject = $"🎬 Lansare nouă pe StreamZone: {body.Title}";
+                    var html = BuildNewContentEmailHtml(body.Title, body.Description ?? "", genre.ToString(), rating.ToString());
+
+                    foreach (var (userName, email) in _observerEmails)
+                    {
+                        var ok = await emailService.SendAsync(email, subject, html);
+                        if (ok) { emailsSent++; recipients.Add(email); }
+                        else emailsFailed++;
+                    }
+                }
+
                 return Results.Ok(new
                 {
                     message = $"Conținut '{body.Title}' publicat. {_contentPublisher.ObserverCount} observatori notificați.",
-                    eventLog = _contentPublisher.EventLog
+                    eventLog = _contentPublisher.EventLog,
+                    email = new
+                    {
+                        provider = emailService.ProviderName,
+                        isReal = emailService.IsRealProvider,
+                        sent = emailsSent,
+                        failed = emailsFailed,
+                        recipients
+                    }
                 });
             });
 
@@ -1223,6 +1455,9 @@ namespace StreamingPlatform.Api
         // ── Lab 6 helpers ─────────────────────────────────────────────────────
         private static readonly Dictionary<string, UserNotificationObserver> _observersByUser = new();
 
+        // Email-ul fiecărui observer (key = userName) — folosit pentru notificări reale
+        private static readonly Dictionary<string, string> _observerEmails = new();
+
         private static Watchlist GetOrCreateWatchlist(string user)
         {
             if (!_watchlists.ContainsKey(user))
@@ -1244,13 +1479,46 @@ namespace StreamingPlatform.Api
             return _sessions[user];
         }
 
+        // ── Email HTML template pentru conținut nou ──────────────────────────
+        private static string BuildNewContentEmailHtml(string title, string description, string genre, string rating)
+        {
+            var safeTitle = System.Net.WebUtility.HtmlEncode(title);
+            var safeDesc  = System.Net.WebUtility.HtmlEncode(description);
+            var safeGenre = System.Net.WebUtility.HtmlEncode(genre);
+            var encodedTitle = Uri.EscapeDataString(title);
+
+            return $@"<!DOCTYPE html>
+<html lang=""ro""><head><meta charset=""UTF-8""></head>
+<body style=""margin:0;padding:0;font-family:Arial,Helvetica,sans-serif;background:#1a0a0e;color:#f5f0f1;"">
+  <table width=""100%"" cellpadding=""0"" cellspacing=""0"" style=""background:#1a0a0e;padding:32px 0;"">
+    <tr><td align=""center"">
+      <table width=""560"" cellpadding=""0"" cellspacing=""0"" style=""background:linear-gradient(160deg,#321520,#2a1118);border:1px solid rgba(212,168,83,0.3);border-radius:12px;padding:36px 32px;"">
+        <tr><td>
+          <div style=""font-family:Georgia,serif;font-size:28px;font-weight:800;letter-spacing:2px;background:linear-gradient(135deg,#c45567,#d4a853);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:24px;"">STREAMZONE</div>
+          <div style=""display:inline-block;padding:6px 14px;background:rgba(212,168,83,0.18);color:#d4a853;border-radius:999px;font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:14px;"">🎬 Lansare nouă</div>
+          <h1 style=""font-family:Georgia,serif;font-size:32px;font-weight:700;color:#f5f0f1;margin:0 0 12px;"">{safeTitle}</h1>
+          <div style=""color:#9a8a8e;font-size:13px;margin-bottom:18px;"">
+            <span style=""padding:3px 10px;background:rgba(123,46,58,0.4);border-radius:4px;color:#e0d5d8;margin-right:6px;"">{safeGenre}</span>
+            <span style=""padding:3px 10px;background:rgba(123,46,58,0.4);border-radius:4px;color:#e0d5d8;"">{rating}</span>
+          </div>
+          <p style=""color:#e0d5d8;font-size:15px;line-height:1.6;margin:0 0 28px;"">{safeDesc}</p>
+          <a href=""http://localhost:5000/watch.html?title={encodedTitle}"" style=""display:inline-block;padding:14px 32px;background:linear-gradient(135deg,#7b2e3a,#a0404d);color:#fff;text-decoration:none;border-radius:30px;font-weight:600;letter-spacing:1px;text-transform:uppercase;font-size:13px;"">▶ Vizionează acum</a>
+          <hr style=""border:none;border-top:1px solid rgba(196,85,103,0.18);margin:32px 0 18px;"">
+          <p style=""color:#6b5a5f;font-size:11px;line-height:1.6;margin:0;"">Primești acest email pentru că ești abonat la lansările noi pe StreamZone (Observer pattern). Pentru a te dezabona, intră în contul tău.</p>
+        </td></tr>
+      </table>
+    </td></tr>
+  </table>
+</body></html>";
+        }
+
         // ── Request DTOs ──────────────────────────────────────────────────────
         private record AddUserRequest(string Name, int Age, string Subscription);
         private record ProxyTestRequest(string UserName, string ContentTitle);
         private record AddSessionRequest(string UserName, string ContentTitle, string Device, string Quality);
         private record NotifyRequest(string UserName, string Message, List<string> Channels);
         private record BridgePlayRequest(string PlayerType, string Device, string ContentTitle, string Quality);
-        private record ObserverSubscribeRequest(string UserName);
+        private record ObserverSubscribeRequest(string UserName, string? Email);
         private record ObserverPublishRequest(string Title, string? Description, string? Genre, string? Rating);
         private record WatchlistItemRequest(string Title);
         private record RateRequest(string Title, double Rating);

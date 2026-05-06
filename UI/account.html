@@ -396,6 +396,209 @@
         }
         @keyframes spin { to { transform: rotate(360deg); } }
 
+        /* ========== TIER & PHONE STYLES ========== */
+        .tier-pill {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 999px;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-left: 8px;
+        }
+        .tier-pill.free     { background: rgba(155, 138, 142, 0.18); color: var(--text-muted); border: 1px solid var(--text-dim); }
+        .tier-pill.standard { background: rgba(196, 85, 103, 0.18); color: var(--burgundy-accent); border: 1px solid var(--burgundy-light); }
+        .tier-pill.premium  {
+            background: linear-gradient(135deg, var(--gold) 0%, #b08840 100%);
+            color: #2a1a0e;
+            border: 1px solid var(--gold-light);
+            box-shadow: 0 0 14px rgba(212, 168, 83, 0.4);
+        }
+
+        .usage-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+        .usage-bar .num { color: var(--white); font-weight: 700; }
+        .usage-bar .num.maxed { color: var(--error); }
+        .usage-track {
+            width: 100%;
+            height: 6px;
+            background: rgba(26, 10, 14, 0.6);
+            border-radius: 3px;
+            overflow: hidden;
+            margin-bottom: 16px;
+        }
+        .usage-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--burgundy-light), var(--gold));
+            border-radius: 3px;
+            transition: width 0.4s ease;
+        }
+        .usage-fill.maxed { background: linear-gradient(90deg, var(--burgundy-accent), var(--error)); }
+        .usage-unlimited {
+            font-size: 12px;
+            color: var(--gold);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .upgrade-btn {
+            display: block;
+            width: 100%;
+            padding: 14px 16px;
+            background: linear-gradient(135deg, var(--gold) 0%, #b08840 100%);
+            color: #2a1a0e;
+            border: none;
+            border-radius: var(--radius-sm);
+            font-family: 'Raleway', sans-serif;
+            font-size: 13px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            cursor: pointer;
+            transition: var(--transition);
+            margin-top: 14px;
+            box-shadow: 0 4px 18px rgba(212, 168, 83, 0.25);
+        }
+        .upgrade-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(212, 168, 83, 0.5); }
+        .downgrade-btn {
+            background: transparent;
+            border: 1px solid rgba(155,138,142,0.4);
+            color: var(--text-muted);
+            box-shadow: none;
+            margin-top: 8px;
+            padding: 10px 14px;
+            font-size: 11px;
+        }
+        .downgrade-btn:hover { color: var(--white); border-color: var(--burgundy-light); transform: none; box-shadow: none; }
+
+        .plan-tiers {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            margin-top: 12px;
+            font-size: 11px;
+        }
+        .plan-tier {
+            padding: 10px;
+            border-radius: var(--radius-sm);
+            border: 1px solid rgba(196, 85, 103, 0.18);
+            background: rgba(26, 10, 14, 0.4);
+            color: var(--text-muted);
+        }
+        .plan-tier strong { color: var(--white); display: block; margin-bottom: 4px; font-size: 12px; }
+        .plan-tier.premium { border-color: rgba(212, 168, 83, 0.4); background: rgba(212, 168, 83, 0.06); }
+        .plan-tier.premium strong { color: var(--gold); }
+
+        .phone-row {
+            display: flex;
+            gap: 8px;
+            align-items: stretch;
+        }
+        .phone-row input { flex: 1; margin-bottom: 0; }
+        .phone-status {
+            font-size: 11px;
+            color: var(--text-muted);
+            margin-top: 8px;
+        }
+        .phone-status.success { color: var(--success); }
+        .phone-status.error { color: var(--error); }
+
+        /* ========== PAYMENT MODAL ========== */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(15, 6, 9, 0.85);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            z-index: 3000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .modal-overlay.active { display: flex; }
+        .modal-card {
+            background: linear-gradient(160deg, var(--bg-card), var(--bg-secondary));
+            border: 1px solid rgba(212, 168, 83, 0.3);
+            border-radius: var(--radius);
+            padding: 36px 32px 28px;
+            max-width: 440px;
+            width: 100%;
+            box-shadow: var(--shadow-deep), 0 0 30px rgba(212, 168, 83, 0.15);
+            animation: fadeIn 0.4s ease;
+        }
+        .modal-card h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 24px;
+            margin-bottom: 6px;
+            background: linear-gradient(135deg, var(--white), var(--gold));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .modal-card .modal-price {
+            font-family: 'Playfair Display', serif;
+            font-size: 32px;
+            color: var(--gold);
+            font-weight: 700;
+            margin: 16px 0;
+        }
+        .modal-card .modal-price small { font-size: 14px; color: var(--text-muted); font-weight: 400; }
+        .modal-perks {
+            background: rgba(26, 10, 14, 0.4);
+            border-radius: var(--radius-sm);
+            padding: 14px 16px;
+            margin-bottom: 18px;
+            font-size: 12px;
+        }
+        .modal-perks li {
+            list-style: none;
+            padding: 4px 0;
+            color: var(--white-soft);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .modal-perks li::before { content: '✓'; color: var(--gold); font-weight: 700; }
+        .modal-form .form-group { margin-bottom: 14px; }
+        .modal-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 18px;
+        }
+        .modal-actions button { flex: 1; }
+        .modal-card input {
+            width: 100%;
+            padding: 12px 14px;
+            background: rgba(26, 10, 14, 0.6);
+            border: 1px solid rgba(196, 85, 103, 0.25);
+            border-radius: var(--radius-sm);
+            color: var(--white);
+            font-family: 'Raleway', sans-serif;
+            font-size: 14px;
+        }
+        .modal-card input:focus {
+            outline: none;
+            border-color: var(--gold);
+            box-shadow: 0 0 0 3px rgba(212, 168, 83, 0.15);
+        }
+        .modal-card label {
+            display: block;
+            font-size: 11px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 6px;
+        }
+
         /* ========== PATTERN PANELS (Lab 5+6 features) ========== */
         .panel-features { max-width: 1100px; }
         .dashboard-layout {
@@ -732,7 +935,8 @@
                         <div class="row"><span>Email</span> <strong id="dash-email">—</strong></div>
                         <div class="row"><span>UserId</span> <strong id="dash-userid">—</strong></div>
                         <div class="row"><span>Vârstă</span> <strong id="dash-age">—</strong></div>
-                        <div class="row"><span>Abonament</span> <strong id="dash-sub">—</strong></div>
+                        <div class="row"><span>Telefon</span> <strong id="dash-phone">—</strong></div>
+                        <div class="row"><span>Abonament</span> <strong><span id="dash-sub">—</span><span class="tier-pill" id="dash-sub-pill" style="display:none;"></span></strong></div>
                     </div>
 
                     <button class="btn" onclick="goToContent()">Mergi la conținut</button>
@@ -747,6 +951,52 @@
                     </div>
 
                     <div class="features-grid">
+                        <!-- ===== ABONAMENT PREMIUM ===== -->
+                        <div class="feature-card" id="card-subscription">
+                            <h3>Abonament <span class="tier-pill" id="sub-tier-pill">FREE</span></h3>
+                            <p class="feature-desc" id="sub-status-text">Planul tău determină limitele zilnice de vizionare și calitatea maximă disponibilă.</p>
+
+                            <div id="sub-usage-section">
+                                <div class="usage-bar">
+                                    <span>🎬 Filme azi</span>
+                                    <span><span class="num" id="sub-movies-used">0</span> / <span id="sub-movies-max">1</span></span>
+                                </div>
+                                <div class="usage-track"><div class="usage-fill" id="sub-movies-fill" style="width:0%"></div></div>
+
+                                <div class="usage-bar">
+                                    <span>📺 Episoade azi</span>
+                                    <span><span class="num" id="sub-eps-used">0</span> / <span id="sub-eps-max">2</span></span>
+                                </div>
+                                <div class="usage-track"><div class="usage-fill" id="sub-eps-fill" style="width:0%"></div></div>
+
+                                <div class="usage-bar" style="margin-top:6px;">
+                                    <span>📡 Calitate maximă</span>
+                                    <span class="num" id="sub-max-quality">1080p</span>
+                                </div>
+                            </div>
+
+                            <div class="plan-tiers" id="plan-comparison">
+                                <div class="plan-tier"><strong>Free — Gratuit</strong>1 film/zi · 2 episoade/zi · 1080p</div>
+                                <div class="plan-tier premium"><strong>Premium — 199 MDL</strong>Nelimitat · 4K Ultra HD</div>
+                            </div>
+
+                            <button class="upgrade-btn" id="btn-upgrade" onclick="openPaymentModal('Premium')">⭐ Upgrade la Premium</button>
+                            <button class="upgrade-btn downgrade-btn" id="btn-downgrade" onclick="cancelSubscription()" style="display:none;">Anulează abonament</button>
+                        </div>
+
+                        <!-- ===== TELEFON / SMS ===== -->
+                        <div class="feature-card" id="card-phone">
+                            <h3>Telefon mobil <span class="pattern-badge">SMS</span></h3>
+                            <p class="feature-desc">Numărul tău e folosit de canalul SMS din pattern-ul Decorator pentru notificări (abonament expiră, conținut nou, oferte).</p>
+                            <div class="phone-row">
+                                <input type="tel" class="feature-input" id="phone-input"
+                                       placeholder="+37368xxxxxx" maxlength="20"
+                                       autocomplete="tel">
+                                <button class="feature-btn" onclick="savePhone()">Salvează</button>
+                            </div>
+                            <div class="phone-status" id="phone-status">SMS-urile vor fi simulate via Orange Moldova.</div>
+                        </div>
+
                         <!-- ===== DECORATOR ===== -->
                         <div class="feature-card">
                             <h3>Notificări <span class="pattern-badge">Decorator</span></h3>
@@ -805,6 +1055,45 @@
             </div>
         </section>
     </main>
+
+    <!-- ============ PAYMENT MODAL (Mock) ============ -->
+    <div class="modal-overlay" id="payment-modal" role="dialog" aria-modal="true">
+        <div class="modal-card">
+            <h2 id="payment-title">Upgrade la Premium</h2>
+            <p style="color:var(--text-muted); font-size:13px;">Plată simulată — date reale nu sunt trimise.</p>
+            <div class="modal-price" id="payment-price">199 MDL <small>/ lună</small></div>
+
+            <ul class="modal-perks">
+                <li>Vizionări nelimitate filme și seriale</li>
+                <li>Calitate 4K Ultra HD</li>
+                <li>Fără reclame</li>
+                <li>Notificări SMS pentru lansări</li>
+                <li>Anulare oricând</li>
+            </ul>
+
+            <form class="modal-form" id="payment-form">
+                <div class="form-group">
+                    <label>Numărul cardului</label>
+                    <input type="text" id="card-number" placeholder="4111 1111 1111 1111" maxlength="19" autocomplete="cc-number" required>
+                </div>
+                <div style="display:grid; grid-template-columns: 2fr 1fr; gap: 10px;">
+                    <div class="form-group">
+                        <label>Titular</label>
+                        <input type="text" id="card-holder" placeholder="NICHITA CAZACU" autocomplete="cc-name" required>
+                    </div>
+                    <div class="form-group">
+                        <label>CVC</label>
+                        <input type="text" id="card-cvc" placeholder="•••" maxlength="4" autocomplete="cc-csc" required>
+                    </div>
+                </div>
+                <div class="alert alert-error" id="payment-error" style="display:none;"></div>
+                <div class="modal-actions">
+                    <button type="button" class="feature-btn ghost" onclick="closePaymentModal()">Anulează</button>
+                    <button type="submit" class="upgrade-btn" style="margin-top:0;" id="payment-submit">Plătește acum</button>
+                </div>
+            </form>
+        </div>
+    </div>
 
     <script>
         const API_BASE = '';
@@ -1156,6 +1445,18 @@
 
             showPanel('dashboard');
             initFeaturePanels();
+            refreshSubscription().then(() => {
+                // Dacă utilizatorul a venit din CTA-ul "Începe Premium azi" pe index
+                if (new URLSearchParams(location.search).get('upgrade') === 'premium') {
+                    history.replaceState(null, '', 'account.html');
+                    const pill = document.getElementById('sub-tier-pill');
+                    if (pill && pill.classList.contains('premium')) {
+                        alert('✓ Ai deja abonament Premium activ.');
+                    } else {
+                        openPaymentModal('Premium');
+                    }
+                }
+            });
         }
 
         // ════════════════════════════════════════════════════════════════
@@ -1174,6 +1475,215 @@
             refreshObserver();
             refreshWatchlist();
         }
+
+        // ════════════════════════════════════════════════════════════════
+        // SUBSCRIPTION + PHONE
+        // ════════════════════════════════════════════════════════════════
+        async function refreshSubscription() {
+            const userId = localStorage.getItem(STORAGE.userId);
+            if (!userId) return;
+            try {
+                const res = await fetch(`/api/account/me?userId=${userId}`);
+                if (!res.ok) throw new Error('HTTP ' + res.status);
+                const data = await res.json();
+
+                // ── Telefon ────────────────────────────────────────────
+                const phoneInput = document.getElementById('phone-input');
+                phoneInput.value = data.phoneNumber || '';
+                document.getElementById('dash-phone').textContent = data.phoneNumber || 'Neconfigurat';
+
+                // Sincronizăm cu localStorage pentru pattern-uri (Decorator SMS)
+                if (data.phoneNumber) localStorage.setItem('sz_phone', data.phoneNumber);
+                else localStorage.removeItem('sz_phone');
+
+                // ── Subscription tier ──────────────────────────────────
+                const tier = (data.subscription?.type || 'Free');
+                const tierLower = tier.toLowerCase();
+                const isPremium = tier === 'Premium';
+                const isFree = tier === 'Free';
+
+                // Pill in dashboard side card
+                const subPill = document.getElementById('dash-sub-pill');
+                subPill.style.display = 'inline-block';
+                subPill.className = 'tier-pill ' + tierLower;
+                subPill.textContent = tier.toUpperCase();
+                document.getElementById('dash-sub').textContent = '';
+
+                // Pill in feature card
+                const cardPill = document.getElementById('sub-tier-pill');
+                cardPill.className = 'tier-pill ' + tierLower;
+                cardPill.textContent = tier.toUpperCase();
+
+                // Status text
+                let statusText = '';
+                if (isPremium && data.subscription?.expiresAt) {
+                    const exp = new Date(data.subscription.expiresAt);
+                    statusText = `Premium activ — expiră ${exp.toLocaleDateString('ro-RO')}.`;
+                } else {
+                    statusText = 'Plan Free — 1 film/zi, 2 episoade/zi, calitate până la 1080p. Treci la Premium pentru vizionări nelimitate și 4K.';
+                }
+                document.getElementById('sub-status-text').textContent = statusText;
+
+                // ── Usage bars ─────────────────────────────────────────
+                const usage = data.todayUsage || { movies: 0, episodes: 0 };
+                const limits = data.limits || { moviesPerDay: 1, episodesPerDay: 2, maxQuality: '1080p' };
+
+                renderUsageBar('movies', usage.movies, limits.moviesPerDay, isPremium);
+                renderUsageBar('eps', usage.episodes, limits.episodesPerDay, isPremium);
+                document.getElementById('sub-max-quality').textContent = limits.maxQuality;
+                if (isPremium) document.getElementById('sub-max-quality').style.color = 'var(--gold)';
+
+                // ── Buttons toggle ─────────────────────────────────────
+                const upgradeBtn = document.getElementById('btn-upgrade');
+                const downgradeBtn = document.getElementById('btn-downgrade');
+                if (isPremium) {
+                    upgradeBtn.style.display = 'none';
+                    downgradeBtn.style.display = 'block';
+                    downgradeBtn.textContent = 'Anulează abonament (revino la Free)';
+                } else {
+                    upgradeBtn.style.display = 'block';
+                    upgradeBtn.textContent = '⭐ Upgrade la Premium — 199 MDL/lună';
+                    upgradeBtn.onclick = () => openPaymentModal('Premium');
+                    downgradeBtn.style.display = 'none';
+                }
+            } catch (e) {
+                console.warn('refreshSubscription failed:', e);
+            }
+        }
+
+        function renderUsageBar(prefix, used, max, isPremium) {
+            const usedEl = document.getElementById(`sub-${prefix}-used`);
+            const maxEl = document.getElementById(`sub-${prefix}-max`);
+            const fillEl = document.getElementById(`sub-${prefix}-fill`);
+            const wrap = fillEl.parentElement.previousElementSibling; // usage-bar
+
+            usedEl.textContent = used;
+
+            if (isPremium || max == null) {
+                maxEl.textContent = '∞';
+                fillEl.style.width = '100%';
+                fillEl.style.background = 'linear-gradient(90deg, var(--gold), var(--gold-light))';
+                usedEl.classList.remove('maxed');
+                fillEl.classList.remove('maxed');
+                return;
+            }
+
+            maxEl.textContent = max;
+            const pct = max > 0 ? Math.min(100, (used / max) * 100) : 0;
+            fillEl.style.width = pct + '%';
+            const maxed = used >= max;
+            usedEl.classList.toggle('maxed', maxed);
+            fillEl.classList.toggle('maxed', maxed);
+        }
+
+        // ── Save phone ───────────────────────────────────────────────────
+        async function savePhone() {
+            const userId = localStorage.getItem(STORAGE.userId);
+            if (!userId) return;
+            const phone = document.getElementById('phone-input').value.trim();
+            const status = document.getElementById('phone-status');
+
+            try {
+                const res = await fetch(`/api/account/${userId}/phone`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ phoneNumber: phone })
+                });
+                const data = await res.json();
+                if (!res.ok) throw new Error(data.error || 'Eroare');
+
+                status.textContent = data.message || 'Telefon salvat.';
+                status.className = 'phone-status success';
+                if (phone) localStorage.setItem('sz_phone', phone);
+                else localStorage.removeItem('sz_phone');
+                document.getElementById('dash-phone').textContent = phone || 'Neconfigurat';
+            } catch (e) {
+                status.textContent = e.message;
+                status.className = 'phone-status error';
+            }
+        }
+
+        // ── Payment modal (doar pentru Premium) ──────────────────────────
+        let _pendingPlan = 'Premium';
+        function openPaymentModal(plan) {
+            _pendingPlan = plan;
+            document.getElementById('payment-title').textContent = 'Upgrade la Premium';
+            document.getElementById('payment-price').innerHTML = '199 MDL <small>/ lună</small>';
+            document.getElementById('payment-error').style.display = 'none';
+            document.getElementById('payment-form').reset();
+            document.getElementById('payment-modal').classList.add('active');
+        }
+        function closePaymentModal() {
+            document.getElementById('payment-modal').classList.remove('active');
+        }
+
+        document.getElementById('payment-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const userId = localStorage.getItem(STORAGE.userId);
+            const cardNumber = document.getElementById('card-number').value.replace(/\s/g, '');
+            const cardHolder = document.getElementById('card-holder').value.trim();
+            const errBox = document.getElementById('payment-error');
+            errBox.style.display = 'none';
+
+            const submitBtn = document.getElementById('payment-submit');
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Se procesează...';
+
+            try {
+                const res = await fetch(`/api/account/${userId}/subscribe`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        planType: _pendingPlan,
+                        cardNumber,
+                        cardHolder
+                    })
+                });
+                const data = await res.json();
+                if (!res.ok) throw new Error(data.error || 'Plată eșuată');
+
+                closePaymentModal();
+                await refreshSubscription();
+                alert('✓ ' + data.message);
+            } catch (e) {
+                errBox.textContent = e.message;
+                errBox.style.display = 'block';
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Plătește acum';
+            }
+        });
+
+        // Format card number with spaces
+        document.getElementById('card-number').addEventListener('input', (e) => {
+            const v = e.target.value.replace(/\s/g, '').slice(0, 16);
+            e.target.value = v.match(/.{1,4}/g)?.join(' ') || v;
+        });
+
+        async function cancelSubscription() {
+            const userId = localStorage.getItem(STORAGE.userId);
+            if (!userId) return;
+            if (!confirm('Sigur vrei să anulezi abonamentul? Vei reveni la planul Free.')) return;
+            try {
+                const res = await fetch(`/api/account/${userId}/subscribe`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ planType: 'Free' })
+                });
+                const data = await res.json();
+                if (!res.ok) throw new Error(data.error || 'Eroare');
+                await refreshSubscription();
+                alert(data.message);
+            } catch (e) { alert('Eroare: ' + e.message); }
+        }
+
+        // Close modal pe ESC sau click în afară
+        document.getElementById('payment-modal').addEventListener('click', e => {
+            if (e.target.id === 'payment-modal') closePaymentModal();
+        });
+        document.addEventListener('keydown', e => {
+            if (e.key === 'Escape') closePaymentModal();
+        });
 
         function getActiveProfileName() {
             return localStorage.getItem(STORAGE.activeProfileName);
@@ -1243,6 +1753,7 @@
 
         async function toggleObserver() {
             const userName = getActiveProfileName();
+            const email = localStorage.getItem(STORAGE.email);
             const btn = document.getElementById('obs-toggle-btn');
             const isUnsub = btn.textContent.includes('Dezabonează');
             const path = isUnsub ? 'unsubscribe' : 'subscribe';
@@ -1250,7 +1761,7 @@
                 await fetch(API_BASE + `/api/observer/${path}`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ userName })
+                    body: JSON.stringify({ userName, email })
                 });
                 await refreshObserver();
             } catch (e) { console.error(e); }
@@ -1258,24 +1769,30 @@
 
         async function simulatePublish() {
             const samples = [
-                { title: 'Premiera 2026', genre: 'Drama',  rating: 'PG13' },
-                { title: 'Aventura Codrilor', genre: 'Action', rating: 'PG' },
-                { title: 'Seara cu Lăutari', genre: 'Drama', rating: 'PG13' },
-                { title: 'Stagiunea Documentar', genre: 'Drama', rating: 'G' }
+                { title: 'Premiera 2026', genre: 'Drama',  rating: 'PG13', desc: 'Un nou film moldovenesc care promite să marcheze anul.' },
+                { title: 'Aventura Codrilor', genre: 'Action', rating: 'PG', desc: 'O aventură palpitantă prin pădurile Moldovei.' },
+                { title: 'Seara cu Lăutari', genre: 'Drama', rating: 'PG13', desc: 'Povestea unui grup de muzicieni basarabeni.' },
+                { title: 'Stagiunea Documentar', genre: 'Drama', rating: 'G', desc: 'Un documentar despre tradițiile de toamnă.' }
             ];
             const pick = samples[Math.floor(Math.random() * samples.length)];
+            const title = pick.title + ' #' + Math.floor(Math.random()*1000);
             try {
-                await fetch(API_BASE + '/api/observer/publish', {
+                const res = await fetch(API_BASE + '/api/observer/publish', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        title: pick.title + ' #' + Math.floor(Math.random()*1000),
-                        description: 'Conținut nou demonstrativ.',
-                        genre: pick.genre,
-                        rating: pick.rating
-                    })
+                    body: JSON.stringify({ title, description: pick.desc, genre: pick.genre, rating: pick.rating })
                 });
+                const data = await res.json();
                 await refreshObserver();
+
+                // Feedback despre email-uri reale
+                if (data.email && data.email.sent > 0) {
+                    const recipientText = data.email.recipients.join(', ');
+                    const realLabel = data.email.isReal ? '📧 Email REAL trimis' : '📧 Email simulat';
+                    alert(`✓ Conținut publicat: "${title}"\n\n${realLabel} la: ${recipientText}\n\nProvider: ${data.email.provider}`);
+                } else if (data.email && data.email.failed > 0) {
+                    alert(`⚠ Conținut publicat dar ${data.email.failed} email(uri) au eșuat.\nVerifică credențialele SMTP în appsettings.json.`);
+                }
             } catch (e) { console.error(e); }
         }
 

@@ -21,6 +21,13 @@ namespace StreamingPlatform.Auth
         public int FailedLoginAttempts { get; set; }
         public DateTime? LockoutEndUtc { get; set; }
 
+        // Telefon pentru SMS notifications (Decorator pattern)
+        public string? PhoneNumber { get; set; }
+
+        // Subscription tier — controlează limitele de vizionare și calitatea max
+        public string SubscriptionType { get; set; } = "Free";       // Free | Standard | Premium
+        public DateTime? SubscriptionExpiresAt { get; set; }
+
         public List<UserProfile> Profiles { get; set; } = new();
         public List<RefreshToken> RefreshTokens { get; set; } = new();
     }

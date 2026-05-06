@@ -270,6 +270,91 @@
             border: 2px solid var(--white);
         }
 
+        /* Episode selector */
+        .episode-selector {
+            position: relative;
+            display: none;  /* afișat doar la seriale */
+        }
+        .episode-selector.visible { display: inline-block; }
+        .episode-btn {
+            background: rgba(123, 46, 58, 0.3);
+            border: 1px solid rgba(160, 64, 77, 0.4);
+            color: var(--white-soft);
+            padding: 4px 12px;
+            border-radius: 6px;
+            font-family: 'Raleway', sans-serif;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            letter-spacing: 0.3px;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .episode-btn:hover { background: var(--burgundy); border-color: var(--burgundy-accent); color: var(--white); }
+        .episode-btn::after {
+            content: '▾';
+            font-size: 10px;
+            opacity: 0.7;
+        }
+
+        .episode-dropdown {
+            position: absolute;
+            bottom: 100%;
+            right: 0;
+            margin-bottom: 8px;
+            background: linear-gradient(160deg, var(--bg-card), var(--bg-secondary, #2a1118));
+            border: 1px solid rgba(196, 85, 103, 0.3);
+            border-radius: var(--radius-sm);
+            min-width: 280px;
+            max-height: 360px;
+            overflow-y: auto;
+            display: none;
+            box-shadow: var(--shadow-deep);
+            z-index: 50;
+        }
+        .episode-dropdown.show { display: block; }
+        .episode-dropdown::-webkit-scrollbar { width: 5px; }
+        .episode-dropdown::-webkit-scrollbar-thumb { background: var(--burgundy); border-radius: 3px; }
+
+        .ep-season-header {
+            padding: 10px 16px;
+            font-family: 'Playfair Display', serif;
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--gold);
+            border-bottom: 1px solid rgba(196,85,103,0.18);
+            background: rgba(26, 10, 14, 0.4);
+            position: sticky;
+            top: 0;
+            backdrop-filter: blur(8px);
+            letter-spacing: 0.5px;
+        }
+        .ep-item {
+            padding: 10px 16px;
+            font-size: 12px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--white-soft);
+            border-bottom: 1px solid rgba(196,85,103,0.06);
+            transition: var(--transition);
+        }
+        .ep-item:hover { background: rgba(123, 46, 58, 0.3); color: var(--white); }
+        .ep-item.active { background: rgba(212, 168, 83, 0.12); color: var(--gold); }
+        .ep-item.active::before { content: '▶'; color: var(--gold); }
+        .ep-num {
+            min-width: 28px;
+            font-family: 'Playfair Display', serif;
+            font-weight: 700;
+            color: var(--burgundy-accent);
+            font-size: 13px;
+        }
+        .ep-title { flex: 1; }
+        .ep-duration { color: var(--text-muted); font-size: 11px; }
+
         /* Quality selector */
         .quality-selector {
             position: relative;
@@ -330,6 +415,20 @@
             background: rgba(123, 46, 58, 0.2);
         }
 
+        .quality-option.locked {
+            opacity: 0.55;
+            cursor: not-allowed;
+            background: repeating-linear-gradient(45deg, transparent, transparent 8px, rgba(212,168,83,0.04) 8px, rgba(212,168,83,0.04) 12px);
+        }
+        .quality-option.locked::after {
+            content: '🔒 Premium';
+            font-size: 9px;
+            color: var(--gold);
+            margin-left: auto;
+            padding-left: 6px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
         .quality-option .badge {
             font-size: 10px;
             background: var(--burgundy);
@@ -1029,6 +1128,10 @@
                     </div>
                     <div class="controls-right">
                         <span class="now-playing">Acum: <span id="now-playing-title">...</span></span>
+                        <div class="episode-selector" id="episode-selector">
+                            <button class="episode-btn" id="episode-btn" onclick="toggleEpisodeMenu()">S1·E1</button>
+                            <div class="episode-dropdown" id="episode-dropdown"></div>
+                        </div>
                         <div class="quality-selector">
                             <button class="quality-btn" id="quality-btn" onclick="toggleQualityMenu()">HD</button>
                             <div class="quality-dropdown" id="quality-dropdown">
@@ -1138,14 +1241,75 @@
             }[c]));
         }
 
-        // Pornim gate-ul. YouTube API se încarcă doar dacă suntem permiși.
-        runProxyGate().then(allowed => {
-            proxyAccessAllowed = allowed;
-            if (allowed) {
-                const s = document.createElement('script');
-                s.src = 'https://www.youtube.com/iframe_api';
-                document.head.appendChild(s);
+        // ════════════════════════════════════════════════════════════════
+        // SUBSCRIPTION GATE — verifică limita zilnică (Free/Standard)
+        // ════════════════════════════════════════════════════════════════
+        window.__subscriptionInfo = null;
+
+        async function runSubscriptionGate() {
+            const userId = localStorage.getItem('sz_userId');
+            if (!userId) {
+                window.__subscriptionInfo = { anonymous: true };
+                return true; // anonim — Proxy gate s-a ocupat deja
             }
+            try {
+                const res = await fetch(`${PROXY_API}/account/${userId}/play`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ title: _movieTitle, quality: '1080p' })
+                });
+                const data = await res.json();
+                window.__subscriptionInfo = data;
+
+                if (!data.allowed) {
+                    document.getElementById('gate-title').innerHTML = '⭐ Limită zilnică atinsă';
+                    document.getElementById('gate-reason').textContent = data.reason || 'Limita zilnică a fost atinsă.';
+                    const ol = document.getElementById('gate-steps');
+                    const todayMov = data.todayUsage?.movies ?? 0;
+                    const todayEps = data.todayUsage?.episodes ?? 0;
+                    const limMov = data.todayUsage?.moviesLimit ?? '—';
+                    const limEps = data.todayUsage?.episodesLimit ?? '—';
+                    ol.innerHTML = `
+                        <li>Plan curent: <b>${data.subscription || 'Free'}</b></li>
+                        <li>Filme azi: ${todayMov} / ${limMov}</li>
+                        <li>Episoade azi: ${todayEps} / ${limEps}</li>
+                        <li>Premium = vizionări <b>nelimitate</b> + 4K Ultra HD</li>
+                    `;
+                    // Schimbăm butonul "Schimbă profilul" în "Upgrade Premium"
+                    const actions = document.querySelector('.proxy-gate .gate-actions');
+                    if (actions) {
+                        actions.innerHTML = `
+                            <a href="index.html" class="gate-btn gate-btn-secondary">← Înapoi la catalog</a>
+                            <a href="account.html" class="gate-btn gate-btn-primary">⭐ Upgrade la Premium</a>
+                        `;
+                    }
+                    document.getElementById('proxy-gate').style.display = 'flex';
+                    document.getElementById('player-loading').style.display = 'none';
+                    return false;
+                }
+
+                // Salvăm calitatea maximă pentru selector
+                if (data.quality?.max) {
+                    window.__maxQuality = data.quality.max;
+                }
+                return true;
+            } catch (e) {
+                window.__subscriptionInfo = { error: true };
+                return true; // fallback — nu blocăm dacă API e jos
+            }
+        }
+
+        // Pornim gate-urile. YouTube API se încarcă doar dacă ambele permit.
+        runProxyGate().then(async (proxyAllowed) => {
+            proxyAccessAllowed = proxyAllowed;
+            if (!proxyAllowed) return;
+
+            const subAllowed = await runSubscriptionGate();
+            if (!subAllowed) return;
+
+            const s = document.createElement('script');
+            s.src = 'https://www.youtube.com/iframe_api';
+            document.head.appendChild(s);
         });
     </script>
 
@@ -1165,14 +1329,42 @@
         };
 
         const POSTER_MAP = {
+            // ── Filme moldovenești ──────────────────────────────────────
             'Carbon': 'https://m.media-amazon.com/images/M/MV5BODY1OGIxOTItM2Q4OC00ZGQyLWIwOWUtMWU4NzZkODI2MDJhXkEyXkFqcGc@._V1_UX800_.jpg',
             'Hotarul': 'https://m.media-amazon.com/images/M/MV5BMTZhN2FlMDItMWY4ZS00OTY3LTk0ZTYtYmU0MDUzYWI5YzMyXkEyXkFqcGc@._V1_UX800_.jpg',
             'Abis': 'https://cineplex.md/posters/Abis%20RO.jpg',
             'Puterea Probabilitatii': 'https://m.media-amazon.com/images/M/MV5BMDA0Yjk5ZjQtYjY4MC00N2RjLWFhYjctNDZhYjRkYWZjOWYyXkEyXkFqcGc@._V1_UX800.jpg',
             'Lăutarii': 'https://m.media-amazon.com/images/M/MV5BNjkwZDdiYzQtYmY3OS00NmI3LWIzZTMtMzMyMzhjYjk3NGI1XkEyXkFqcGc@._V1_.jpg',
+            'Maria Mirabela': 'https://m.media-amazon.com/images/M/MV5BNjI4Mzk1NzUyMV5BMl5BanBnXkFtZTgwODg1NTM5NjE@._V1_FMjpg_UX1000_.jpg',
+            'Nunta în Basarabia': 'https://image.pmgstatic.com/cache/resized/w663/files/images/film/posters/162/493/162493597_45e348.jpg',
+            'Tatăl meu, dictatorul': 'https://placehold.co/600x900/2a1118/d4a853?text=Tatal+meu+dictatorul&font=playfair',
+            'Ce lume minunată': 'https://film.md/uploads/movies/big/ce_lume_minunata_online_film_md.png',
+            'La limita de jos a cerului': 'https://m.media-amazon.com/images/M/MV5BNGZkZjZmZGMtN2RjZS00ZTAxLTg2OWMtODY1YWExZTQxYTg0XkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg',
+            'Dimitrie Cantemir': 'https://m.media-amazon.com/images/M/MV5BODAyYjI1ZTktNGZiYy00NmY4LTkwNWYtNGZhNWE4MDc5NGQxXkEyXkFqcGc@._V1_.jpg',
+            'Codru': 'https://placehold.co/600x900/1a3d28/d4a853?text=CODRU&font=playfair',
+
+            // ── Filme internaționale ────────────────────────────────────
+            'Inception': 'https://m.media-amazon.com/images/M/MV5BMjAxMzY3NjcxNF5BMl5BanBnXkFtZTcwNTI5OTM0Mw@@._V1_.jpg',
+            'The Dark Knight': 'https://atthemovies.uk/cdn/shop/products/DarkKnight2008adv1sht27x40in350.jpg?v=1621381289&width=1090',
+            'Interstellar': 'https://m.media-amazon.com/images/I/91obuWzA3XL.jpg',
+            'The Shawshank Redemption': 'https://m.media-amazon.com/images/I/911USrdQtPL.jpg',
+
+            // ── Seriale ─────────────────────────────────────────────────
             'Plaha': 'https://images.kinorium.com/movie/1080/11994379.jpg?1759733447',
+            'Toate pânzele sus!': 'https://carturesti.md/img-prod/230085293-0.png',
+            'Cumpenele Familiei': 'https://placehold.co/600x900/2a1118/d4a853?text=Cumpenele+Familiei&font=playfair',
+            'Breaking Bad': 'https://i.ebayimg.com/images/g/HZ0AAOSwolNkPYqj/s-l1200.jpg',
+            'House M.D.': 'https://lh4.googleusercontent.com/proxy/g1rGi-gQZqLcHtLiIYVFLi3_vym9dS2JkF4LmD-Kxb-vBUj58-Xyg1fVvHrXq6BnEFWl2U0HP8Iqad0u7tkch_OxoGFoDG7r2g',
+            'The Witcher': 'https://i.ebayimg.com/00/s/MTYwMFgxMDgw/z/nyoAAOSw0P9hz5Vh/$_57.JPG?set_id=8800005007',
+            'Stranger Things': 'https://m.media-amazon.com/images/I/81U0-cRG34S._AC_UF894,1000_QL80_.jpg',
+
+            // ── Documentare ─────────────────────────────────────────────
             'Moldova: Inima de Vin': 'https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?w=400&h=600&fit=crop',
-            'Chișinău — Memorii': 'https://images.unsplash.com/photo-1486325212027-8081e485255e?w=400&h=600&fit=crop'
+            'Chișinău — Memorii': 'https://images.unsplash.com/photo-1486325212027-8081e485255e?w=400&h=600&fit=crop',
+            'Codrii Moldovei': 'https://placehold.co/600x900/1a3d28/d4a853?text=Codrii+Moldovei&font=playfair',
+            'Ștefan cel Mare — Legenda Moldovei': 'https://placehold.co/600x900/3d2415/d4a853?text=Stefan+cel+Mare&font=playfair',
+            'Mănăstirile Basarabiei': 'https://placehold.co/600x900/3d2415/d4a853?text=Manastirile+Basarabiei&font=playfair',
+            'Our Planet': 'https://placehold.co/600x900/0a2840/d4a853?text=Our+Planet&font=playfair'
         };
 
         // Obținem titlul din URL
@@ -1302,18 +1494,147 @@
 
         function toggleQualityMenu() {
             document.getElementById('quality-dropdown').classList.toggle('show');
+            applyQualityLocks();
         }
 
-        function setQuality(quality) {
+        // Aplică restricțiile de calitate în funcție de tier-ul utilizatorului
+        function applyQualityLocks() {
+            const max = (window.__maxQuality || '720p');
+            const rank = { small: 1, medium: 1, large: 2, hd1080: 3, hd1440: 4, hd2160: 4 };
+            const maxRank = { '480p': 1, '720p': 2, '1080p': 3, '4K': 4 }[max] || 2;
+            document.querySelectorAll('.quality-option').forEach(opt => {
+                const onclickStr = opt.getAttribute('onclick') || '';
+                const m = onclickStr.match(/setQuality\('([^']+)'\)/);
+                const q = m ? m[1] : null;
+                if (q && rank[q] > maxRank) opt.classList.add('locked');
+                else opt.classList.remove('locked');
+            });
+        }
+
+        function setQuality(quality, ev) {
             if (!player) return;
+            const e = ev || (typeof event !== 'undefined' ? event : null);
+            const target = e?.target || e?.currentTarget;
+
+            // Blocăm dacă opțiunea e marcată ca Premium-only
+            if (target && target.classList.contains('locked')) {
+                if (confirm('Această calitate e disponibilă doar pe Premium. Vrei să faci upgrade acum?')) {
+                    window.location = 'account.html';
+                }
+                return;
+            }
+
             player.setPlaybackQuality(quality);
 
             const labels = { small: '360p', medium: '480p', large: 'HD', hd1080: 'FHD' };
             document.getElementById('quality-btn').textContent = labels[quality] || 'HD';
 
             document.querySelectorAll('.quality-option').forEach(el => el.classList.remove('active'));
-            event.target.classList.add('active');
+            if (target) target.classList.add('active');
             document.getElementById('quality-dropdown').classList.remove('show');
+        }
+
+        // ════════════════════════════════════════════════════════════════
+        // EPISODE SELECTOR (pentru seriale)
+        // ════════════════════════════════════════════════════════════════
+        let _currentSeason = 1;
+        let _currentEpisode = 1;
+        let _seriesData = null;
+
+        async function initEpisodeSelector(title) {
+            try {
+                const res = await fetch(`${API}/series`);
+                const allSeries = await res.json();
+                const series = allSeries.find(s => s.title === title);
+                if (!series) return;
+
+                _seriesData = series;
+                const totalEps = series.episodes;
+                const totalSeasons = series.seasons;
+                const epsPerSeason = Math.ceil(totalEps / totalSeasons);
+
+                // Generăm structura sezoane × episoade
+                const dropdown = document.getElementById('episode-dropdown');
+                let html = '';
+                let epCounter = 0;
+                for (let s = 1; s <= totalSeasons; s++) {
+                    const epsThisSeason = (s === totalSeasons)
+                        ? (totalEps - epCounter)
+                        : Math.min(epsPerSeason, totalEps - epCounter);
+                    html += `<div class="ep-season-header">Sezonul ${s} · ${epsThisSeason} episoade</div>`;
+                    for (let e = 1; e <= epsThisSeason; e++) {
+                        epCounter++;
+                        const isActive = (s === 1 && e === 1) ? 'active' : '';
+                        html += `
+                            <div class="ep-item ${isActive}" data-season="${s}" data-episode="${e}"
+                                 onclick="selectEpisode(${s}, ${e}, this)">
+                                <span class="ep-num">${e}</span>
+                                <span class="ep-title">Episodul ${e}</span>
+                                <span class="ep-duration">${series.episodeDuration} min</span>
+                            </div>
+                        `;
+                    }
+                }
+                dropdown.innerHTML = html;
+
+                // Afișăm selectorul
+                document.getElementById('episode-selector').classList.add('visible');
+                updateEpisodeBtnLabel();
+            } catch (e) {
+                console.warn('initEpisodeSelector failed:', e);
+            }
+        }
+
+        function toggleEpisodeMenu() {
+            document.getElementById('episode-dropdown').classList.toggle('show');
+        }
+
+        async function selectEpisode(season, episode, el) {
+            _currentSeason = season;
+            _currentEpisode = episode;
+
+            // Marcăm activ
+            document.querySelectorAll('.ep-item').forEach(it => it.classList.remove('active'));
+            if (el) el.classList.add('active');
+
+            updateEpisodeBtnLabel();
+            document.getElementById('episode-dropdown').classList.remove('show');
+
+            // Update "Now playing"
+            const nowEl = document.getElementById('now-playing-title');
+            if (nowEl) nowEl.textContent = `${_seriesData?.title || ''} — S${season}·E${episode}`;
+
+            // Restart player de la început (același trailer, episod nou conceptual)
+            if (player && player.seekTo) {
+                player.seekTo(0, true);
+                player.playVideo?.();
+            }
+
+            // Înregistrează vizionarea episodului în BD (pentru limita zilnică)
+            const userId = localStorage.getItem('sz_userId');
+            if (userId && _seriesData) {
+                try {
+                    const res = await fetch(`${API}/account/${userId}/play`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ title: _seriesData.title, quality: '1080p' })
+                    });
+                    const data = await res.json();
+                    if (!data.allowed) {
+                        alert(`⚠ ${data.reason}`);
+                    } else if (data.todayUsage?.episodesLimit != null) {
+                        const remaining = data.todayUsage.episodesLimit - data.todayUsage.episodes;
+                        if (remaining <= 0) {
+                            console.log('Limita de episoade atinsă pe ziua de azi.');
+                        }
+                    }
+                } catch (e) { /* fallback silent */ }
+            }
+        }
+
+        function updateEpisodeBtnLabel() {
+            const btn = document.getElementById('episode-btn');
+            if (btn) btn.textContent = `S${_currentSeason}·E${_currentEpisode}`;
         }
 
         // Progress bar click to seek
@@ -1324,10 +1645,13 @@
             player.seekTo(pos * player.getDuration(), true);
         });
 
-        // Close quality menu on outside click
+        // Close quality + episode menus on outside click
         document.addEventListener('click', (e) => {
             if (!e.target.closest('.quality-selector')) {
                 document.getElementById('quality-dropdown').classList.remove('show');
+            }
+            if (!e.target.closest('.episode-selector')) {
+                document.getElementById('episode-dropdown')?.classList.remove('show');
             }
         });
 
@@ -1511,6 +1835,11 @@
 
                 // ========== INIT BRIDGE + FLYWEIGHT ==========
                 initStreamingTech();
+
+                // ========== EPISODE SELECTOR (doar pentru Seriale) ==========
+                if (movie.type === 'Series') {
+                    await initEpisodeSelector(movie.title);
+                }
 
             } catch (e) {
                 document.getElementById('movie-info').innerHTML =
