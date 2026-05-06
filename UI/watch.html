@@ -605,6 +605,87 @@
             to { transform: rotate(360deg); }
         }
 
+        /* ========== PROXY ACCESS GATE ========== */
+        .proxy-gate {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(160deg, rgba(26,10,14,0.97), rgba(123,46,58,0.95));
+            z-index: 10;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
+            text-align: center;
+            color: var(--white);
+        }
+        .proxy-gate h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 36px;
+            margin-bottom: 14px;
+            background: linear-gradient(135deg, var(--white), var(--gold));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .proxy-gate .reason {
+            font-size: 16px;
+            color: var(--white-soft);
+            max-width: 580px;
+            margin-bottom: 24px;
+            line-height: 1.6;
+        }
+        .proxy-gate ol {
+            text-align: left;
+            margin: 0 auto 24px;
+            padding-left: 0;
+            list-style: none;
+            max-width: 580px;
+        }
+        .proxy-gate ol li {
+            background: rgba(0,0,0,0.4);
+            border-left: 3px solid var(--gold);
+            padding: 8px 14px;
+            margin-bottom: 6px;
+            font-size: 13px;
+            font-family: 'Courier New', monospace;
+            color: var(--white-soft);
+        }
+        .proxy-gate .gate-actions {
+            display: flex;
+            gap: 12px;
+        }
+        .proxy-gate .gate-btn {
+            padding: 12px 28px;
+            border-radius: 30px;
+            font-family: 'Raleway', sans-serif;
+            font-size: 13px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            text-decoration: none;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        .proxy-gate .gate-btn-primary {
+            background: linear-gradient(135deg, var(--gold), #b8893f);
+            color: #2a1118;
+            border: none;
+        }
+        .proxy-gate .gate-btn-secondary {
+            background: transparent;
+            color: var(--white);
+            border: 1px solid rgba(245, 240, 241, 0.4);
+        }
+        .proxy-gate .gate-btn:hover { transform: translateY(-2px); }
+
+        /* Access info card inside Detalii Streaming */
+        .access-card-status {
+            font-weight: 700;
+            font-size: 14px;
+        }
+        .access-card-status.allow { color: #6fc88a; }
+        .access-card-status.deny  { color: #ff6e7c; }
+
         /* ========== STREAMING TECH SECTION (Flyweight + Bridge) ========== */
         .streaming-section {
             margin-top: 40px;
@@ -630,7 +711,7 @@
 
         .tech-grid {
             display: grid;
-            grid-template-columns: 1fr 1fr;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 24px;
             margin-bottom: 32px;
         }
@@ -913,6 +994,16 @@
                 <div class="spinner"></div>
                 Se încarcă playerul...
             </div>
+            <!-- Proxy access gate (Lab 5 — Proxy Pattern) -->
+            <div class="proxy-gate" id="proxy-gate" style="display:none;">
+                <h2 id="gate-title">🔒 Acces restricționat</h2>
+                <div class="reason" id="gate-reason">Verificare acces...</div>
+                <ol id="gate-steps"></ol>
+                <div class="gate-actions">
+                    <a href="index.html" class="gate-btn gate-btn-secondary">← Înapoi la catalog</a>
+                    <a href="account.html" class="gate-btn gate-btn-primary">Schimbă profilul</a>
+                </div>
+            </div>
             <div id="youtube-player"></div>
             <div class="player-cover" id="player-cover">
     <div class="spinner"></div>
@@ -962,8 +1053,101 @@
         </div>
     </section>
 
-    <!-- YouTube IFrame API -->
-    <script src="https://www.youtube.com/iframe_api"></script>
+    <script>
+        // ════════════════════════════════════════════════════════════════
+        // PROXY ACCESS GATE — rulează ÎNAINTE de încărcarea playerului
+        // ════════════════════════════════════════════════════════════════
+        const ACTIVE_PROFILE_NAME = localStorage.getItem('sz_activeProfileName');
+        const PROXY_API = 'http://localhost:5000/api';
+        const _urlParams = new URLSearchParams(window.location.search);
+        const _movieTitle = _urlParams.get('title') || 'Carbon';
+        let proxyAccessAllowed = true; // optimist; dacă logat, verificăm
+
+        // Stocăm rezultatul Proxy global ca să-l randăm și în cardul "Verificare Acces"
+        // după ce loadMovieInfo() construiește DOM-ul.
+        window.__proxyResult = null;
+
+        async function runProxyGate() {
+            // Dacă nu e logat, nu blocăm — anonim
+            if (!ACTIVE_PROFILE_NAME) {
+                window.__proxyResult = { anonymous: true };
+                return true;
+            }
+            try {
+                const res = await fetch(PROXY_API + '/proxy/test-access', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ userName: ACTIVE_PROFILE_NAME, contentTitle: _movieTitle })
+                });
+                const data = await res.json();
+                window.__proxyResult = data;
+
+                if (!data.allowed) {
+                    document.getElementById('gate-title').textContent = '🔒 Acces refuzat';
+                    document.getElementById('gate-reason').textContent = data.reason || 'Acest conținut nu este disponibil pentru profilul tău.';
+                    const ol = document.getElementById('gate-steps');
+                    ol.innerHTML = (data.steps || []).map(s => `<li>${_escapeHtml(s)}</li>`).join('');
+                    document.getElementById('proxy-gate').style.display = 'flex';
+                    document.getElementById('player-loading').style.display = 'none';
+                    return false;
+                }
+                return true;
+            } catch (e) {
+                window.__proxyResult = { error: true };
+                return true; // fallback
+            }
+        }
+
+        // Apelat din loadMovieInfo() după ce DOM-ul streaming-section există
+        function renderProxyVerdictCard() {
+            const proxyInfo = document.getElementById('proxy-info');
+            if (!proxyInfo) return;
+            const data = window.__proxyResult;
+            if (!data) return;
+
+            if (data.anonymous) {
+                proxyInfo.innerHTML = `
+                    <div class="row"><span class="label">Status</span><span class="access-card-status allow">○ Anonim</span></div>
+                    <div style="font-size:12px; color: var(--text-muted); margin-top:8px;">
+                        Loghează-te din <a href="account.html" style="color:var(--burgundy-accent);">contul tău</a>
+                        ca să activezi controlul de acces Proxy bazat pe profil.
+                    </div>
+                `;
+                return;
+            }
+            if (data.error) {
+                proxyInfo.innerHTML = '<span style="color: var(--burgundy-accent);">⚠ Proxy API indisponibil — redare permisă fallback</span>';
+                return;
+            }
+
+            const stepsHtml = (data.steps || []).map(s =>
+                `<div style="font-family:'Courier New', monospace; font-size:11px; line-height:1.7;">${_escapeHtml(s)}</div>`
+            ).join('');
+            proxyInfo.innerHTML = `
+                <div class="row" style="margin-bottom:8px;">
+                    <span class="label">Verdict</span>
+                    <span class="access-card-status ${data.allowed ? 'allow' : 'deny'}">${data.allowed ? '✓ PERMIS' : '✗ REFUZAT'}</span>
+                </div>
+                ${stepsHtml}
+            `;
+        }
+
+        function _escapeHtml(s) {
+            return String(s).replace(/[&<>"']/g, c => ({
+                '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+            }[c]));
+        }
+
+        // Pornim gate-ul. YouTube API se încarcă doar dacă suntem permiși.
+        runProxyGate().then(allowed => {
+            proxyAccessAllowed = allowed;
+            if (allowed) {
+                const s = document.createElement('script');
+                s.src = 'https://www.youtube.com/iframe_api';
+                document.head.appendChild(s);
+            }
+        });
+    </script>
 
     <script>
         const API = 'http://localhost:5000/api';
@@ -1233,6 +1417,18 @@
                         <p class="streaming-subtitle">Configurează dispozitivul și calitatea streamului — în culise rulează pattern-urile Bridge și Flyweight</p>
 
                         <div class="tech-grid">
+                            <!-- PROXY: Access verdict -->
+                            <div class="tech-card">
+                                <div class="tech-card-header">
+                                    <h4 class="tech-card-title">Verificare Acces</h4>
+                                    <span class="tech-card-pattern">Proxy</span>
+                                </div>
+                                <p class="tech-card-desc">ContentAccessProxy a interceptat cererea de redare și a verificat autentificarea, abonamentul și vârsta înainte de a delega către playerul real.</p>
+                                <div class="tech-info" id="proxy-info" style="min-height:140px;">
+                                    <span class="label">Se verifică...</span>
+                                </div>
+                            </div>
+
                             <!-- BRIDGE: Device selector -->
                             <div class="tech-card">
                                 <div class="tech-card-header">
@@ -1326,12 +1522,16 @@
         // BRIDGE + FLYWEIGHT INTEGRATION
         // ============================================================
 
-        // Stare locală pentru sesiunea curentă (nu persistată — se resetează la refresh)
-        const VIEWER_NAME = 'Vizitator-' + Math.floor(Math.random() * 9000 + 1000);
+        // Stare locală pentru sesiunea curentă — folosim profilul activ dacă e logat
+        const VIEWER_NAME = (localStorage.getItem('sz_activeProfileName')
+            || ('Vizitator-' + Math.floor(Math.random() * 9000 + 1000)));
         let currentDevice = 'desktop';
         let currentQuality = '1080p';
 
         async function initStreamingTech() {
+            // Randăm cardul Proxy (verdict deja calculat înainte de player)
+            renderProxyVerdictCard();
+
             // Wire up device buttons
             document.querySelectorAll('#device-selector .selector-btn').forEach(btn => {
                 btn.addEventListener('click', () => {

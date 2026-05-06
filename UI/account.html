@@ -396,12 +396,201 @@
         }
         @keyframes spin { to { transform: rotate(360deg); } }
 
+        /* ========== PATTERN PANELS (Lab 5+6 features) ========== */
+        .panel-features { max-width: 1100px; }
+        .dashboard-layout {
+            display: grid;
+            grid-template-columns: minmax(320px, 1fr) 2fr;
+            gap: 24px;
+            align-items: start;
+        }
+        @media (max-width: 900px) {
+            .dashboard-layout { grid-template-columns: 1fr; }
+        }
+        .features-header {
+            text-align: center;
+            margin: 32px 0 24px;
+        }
+        .features-header h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 28px;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--white), var(--gold));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 6px;
+        }
+        .features-header p { color: var(--text-muted); font-size: 14px; }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+            gap: 24px;
+        }
+
+        .feature-card {
+            background: linear-gradient(160deg, var(--bg-card), var(--bg-secondary));
+            border: 1px solid rgba(196, 85, 103, 0.18);
+            border-radius: var(--radius);
+            padding: 24px;
+            box-shadow: var(--shadow-deep);
+        }
+        .feature-card h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 4px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+        }
+        .feature-card .pattern-badge {
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding: 4px 10px;
+            border-radius: 999px;
+            background: rgba(212, 168, 83, 0.18);
+            color: var(--gold);
+            border: 1px solid rgba(212, 168, 83, 0.4);
+        }
+        .feature-card .feature-desc {
+            color: var(--text-muted);
+            font-size: 12px;
+            margin-bottom: 16px;
+        }
+
+        /* Channels (Decorator) */
+        .channels-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 14px;
+        }
+        .channel-chip {
+            padding: 8px 14px;
+            border-radius: 999px;
+            border: 1px solid rgba(196, 85, 103, 0.3);
+            background: rgba(26, 10, 14, 0.5);
+            color: var(--white-soft);
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            user-select: none;
+            transition: var(--transition);
+        }
+        .channel-chip.active {
+            background: linear-gradient(135deg, var(--burgundy), var(--burgundy-light));
+            border-color: var(--burgundy-accent);
+            color: var(--white);
+        }
+        .feature-input {
+            width: 100%;
+            padding: 10px 12px;
+            background: rgba(26, 10, 14, 0.6);
+            border: 1px solid rgba(196, 85, 103, 0.2);
+            border-radius: var(--radius-sm);
+            color: var(--white);
+            font-family: 'Raleway', sans-serif;
+            font-size: 13px;
+            margin-bottom: 12px;
+        }
+        .feature-btn {
+            padding: 10px 16px;
+            border-radius: 999px;
+            background: linear-gradient(135deg, var(--burgundy), var(--burgundy-light));
+            color: var(--white);
+            border: none;
+            font-family: 'Raleway', sans-serif;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        .feature-btn:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(123,46,58,0.4); }
+        .feature-btn.ghost {
+            background: transparent;
+            border: 1px solid rgba(196, 85, 103, 0.4);
+        }
+        .feature-btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none; box-shadow: none; }
+
+        .feature-output {
+            margin-top: 14px;
+            padding: 12px 14px;
+            background: rgba(0,0,0,0.35);
+            border: 1px solid rgba(123, 46, 58, 0.25);
+            border-radius: var(--radius-sm);
+            font-family: 'Courier New', monospace;
+            font-size: 11px;
+            line-height: 1.7;
+            color: var(--white-soft);
+            max-height: 240px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+        .feature-output:empty { display: none; }
+
+        /* Watchlist (Command) */
+        .watchlist-actions {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 12px;
+            flex-wrap: wrap;
+        }
+        .watchlist-actions .feature-btn { flex: 1; min-width: 80px; padding: 8px 10px; }
+        .watchlist-list { list-style: none; padding: 0; margin: 0; }
+        .watchlist-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 12px;
+            background: rgba(26, 10, 14, 0.4);
+            border: 1px solid rgba(196, 85, 103, 0.15);
+            border-radius: var(--radius-sm);
+            margin-bottom: 6px;
+            font-size: 13px;
+        }
+        .watchlist-item .item-rating { color: var(--gold); font-size: 12px; }
+        .watchlist-item button {
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            font-size: 14px;
+            padding: 2px 8px;
+        }
+        .watchlist-item button:hover { color: var(--burgundy-accent); }
+
+        /* Observer event log */
+        .event-log {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        .event-log li {
+            padding: 6px 10px;
+            border-left: 2px solid var(--burgundy-accent);
+            margin-bottom: 4px;
+            font-size: 12px;
+            color: var(--white-soft);
+            background: rgba(26, 10, 14, 0.3);
+        }
+        .event-log li:empty { display: none; }
+
         @media (max-width: 600px) {
             .topbar { padding: 20px 24px; }
             .card { padding: 32px 24px; }
             .picker-header h1 { font-size: 36px; }
             .avatar { width: 110px; height: 110px; font-size: 50px; }
             .profiles-grid { gap: 20px; }
+            .features-grid { grid-template-columns: 1fr; }
         }
     </style>
 </head>
@@ -490,6 +679,18 @@
                         <input type="text" id="cp-name" required maxlength="50">
                     </div>
                     <div class="form-group">
+                        <label for="cp-age">Vârstă</label>
+                        <input type="number" id="cp-age" min="3" max="120" value="25" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="cp-subscription">Tip abonament <span style="color:var(--burgundy-accent);font-size:11px;text-transform:none;letter-spacing:0;">(folosit de Proxy pentru control acces)</span></label>
+                        <select id="cp-subscription">
+                            <option value="Free">Free — doar G și PG</option>
+                            <option value="Standard" selected>Standard — până la PG-13</option>
+                            <option value="Premium">Premium — toate inclusiv R</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
                         <label for="cp-language">Limbă preferată</label>
                         <select id="cp-language">
                             <option value="ro">Română</option>
@@ -506,34 +707,101 @@
                     <button type="submit" class="btn" id="cp-btn">Creează profil</button>
                 </form>
                 <div class="form-footer">
-                    <a onclick="showPanel('picker')">← Înapoi</a>
+                    <a onclick="showProfilePicker()">← Înapoi</a>
                 </div>
             </div>
         </section>
 
         <!-- ============ ACTIVE / DASHBOARD ============ -->
-        <section class="panel" id="panel-dashboard">
-            <div class="card">
-                <h1 id="dash-greeting">Salut!</h1>
-                <p class="subtitle">Profil activ pe acest dispozitiv</p>
+        <section class="panel panel-features" id="panel-dashboard">
+            <div class="dashboard-layout">
+                <div class="card" style="padding:32px 28px;">
+                    <h1 id="dash-greeting" style="font-size:26px;">Salut!</h1>
+                    <p class="subtitle">Profil activ pe acest dispozitiv</p>
 
-                <div class="active-profile-banner">
-                    <div class="mini-avatar" id="dash-avatar">?</div>
-                    <div>
-                        <div><strong id="dash-profile-name">—</strong></div>
-                        <div style="color: var(--text-muted); font-size: 12px;" id="dash-profile-meta">—</div>
+                    <div class="active-profile-banner">
+                        <div class="mini-avatar" id="dash-avatar">?</div>
+                        <div>
+                            <div><strong id="dash-profile-name">—</strong></div>
+                            <div style="color: var(--text-muted); font-size: 12px;" id="dash-profile-meta">—</div>
+                        </div>
+                    </div>
+
+                    <div class="account-info">
+                        <div class="row"><span>Cont</span> <strong id="dash-username">—</strong></div>
+                        <div class="row"><span>Email</span> <strong id="dash-email">—</strong></div>
+                        <div class="row"><span>UserId</span> <strong id="dash-userid">—</strong></div>
+                        <div class="row"><span>Vârstă</span> <strong id="dash-age">—</strong></div>
+                        <div class="row"><span>Abonament</span> <strong id="dash-sub">—</strong></div>
+                    </div>
+
+                    <button class="btn" onclick="goToContent()">Mergi la conținut</button>
+                    <button class="btn btn-secondary" style="margin-top: 12px;" onclick="switchProfile()">Schimbă profil</button>
+                    <button class="btn btn-danger" style="margin-top: 12px;" onclick="logout()">Deconectare completă</button>
+                </div>
+
+                <div>
+                    <div class="features-header">
+                        <h2>Funcționalități profil</h2>
+                        <p>Cele patru patternuri activate o dată cu autentificarea</p>
+                    </div>
+
+                    <div class="features-grid">
+                        <!-- ===== DECORATOR ===== -->
+                        <div class="feature-card">
+                            <h3>Notificări <span class="pattern-badge">Decorator</span></h3>
+                            <p class="feature-desc">Combină dinamic canalele de notificare. Fiecare canal e un decorator în jurul notificării de bază.</p>
+                            <div class="channels-row" id="dec-channels">
+                                <span class="channel-chip" data-ch="Email">📧 Email</span>
+                                <span class="channel-chip" data-ch="SMS">📱 SMS</span>
+                                <span class="channel-chip" data-ch="Push">🔔 Push</span>
+                                <span class="channel-chip" data-ch="Logging">📝 Logging</span>
+                            </div>
+                            <input type="text" class="feature-input" id="dec-message"
+                                   placeholder="Mesaj de test (ex: Abonamentul expiră curând)"
+                                   value="Conținut nou disponibil pentru tine!">
+                            <div style="display:flex; gap:8px;">
+                                <button class="feature-btn" onclick="sendDecoratorNotify()">Trimite notificare</button>
+                                <button class="feature-btn ghost" onclick="saveNotifyPrefs()">Salvează preferințe</button>
+                            </div>
+                            <div class="feature-output" id="dec-output"></div>
+                        </div>
+
+                        <!-- ===== OBSERVER ===== -->
+                        <div class="feature-card">
+                            <h3>Lansări noi <span class="pattern-badge">Observer</span></h3>
+                            <p class="feature-desc">Profilul activ e abonat la <code>ContentPublisher</code>. Când apare conținut nou, primește notificare automat.</p>
+                            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; font-size:12px; color:var(--text-muted);">
+                                <span>Status: <b id="obs-status" style="color:var(--gold);">—</b></span>
+                                <span>Abonați total: <b id="obs-count">—</b></span>
+                            </div>
+                            <div style="display:flex; gap:8px; flex-wrap:wrap; margin-bottom:10px;">
+                                <button class="feature-btn" id="obs-toggle-btn" onclick="toggleObserver()">Abonează</button>
+                                <button class="feature-btn ghost" onclick="simulatePublish()">Simulează lansare</button>
+                                <button class="feature-btn ghost" onclick="refreshObserver()">↻</button>
+                            </div>
+                            <ul class="event-log" id="obs-log"></ul>
+                        </div>
+
+                        <!-- ===== COMMAND ===== -->
+                        <div class="feature-card">
+                            <h3>Watchlist <span class="pattern-badge">Command</span></h3>
+                            <p class="feature-desc">Fiecare adăugare/ștergere/rating este un obiect Command — istoric complet cu Undo/Redo per profil.</p>
+                            <input type="text" class="feature-input" id="cmd-title" placeholder="Titlu film/serial (ex: Carbon)">
+                            <div class="watchlist-actions">
+                                <button class="feature-btn" onclick="cmdAdd()">＋ Adaugă</button>
+                                <button class="feature-btn ghost" onclick="cmdRemove()">－ Elimină</button>
+                                <button class="feature-btn ghost" onclick="cmdRate()">★ Rating 4.5</button>
+                            </div>
+                            <div style="display:flex; gap:8px; margin-bottom:12px;">
+                                <button class="feature-btn ghost" id="cmd-undo" onclick="cmdUndo()" disabled>↶ Undo</button>
+                                <button class="feature-btn ghost" id="cmd-redo" onclick="cmdRedo()" disabled>↷ Redo</button>
+                            </div>
+                            <ul class="watchlist-list" id="cmd-list"></ul>
+                            <div class="feature-output" id="cmd-log" style="margin-top:10px;"></div>
+                        </div>
                     </div>
                 </div>
-
-                <div class="account-info">
-                    <div class="row"><span>Cont</span> <strong id="dash-username">—</strong></div>
-                    <div class="row"><span>Email</span> <strong id="dash-email">—</strong></div>
-                    <div class="row"><span>UserId</span> <strong id="dash-userid">—</strong></div>
-                </div>
-
-                <button class="btn" onclick="goToContent()">Mergi la conținut</button>
-                <button class="btn btn-secondary" style="margin-top: 12px;" onclick="showPanel('picker')">Schimbă profil</button>
-                <button class="btn btn-danger" style="margin-top: 12px;" onclick="logout()">Deconectare completă</button>
             </div>
         </section>
     </main>
@@ -548,8 +816,24 @@
             refreshToken: 'sz_refreshToken',
             activeProfileId: 'sz_activeProfileId',
             activeProfileName: 'sz_activeProfileName',
-            activeProfileKids: 'sz_activeProfileKids'
+            activeProfileKids: 'sz_activeProfileKids',
+            activeProfileAge: 'sz_activeProfileAge',
+            activeProfileSub: 'sz_activeProfileSub',
+            notifyChannels: 'sz_notifyChannels'
         };
+
+        // Pattern-related local metadata (DB nu e extinsă; bridge Proxy.UserProfile = Auth.UserProfile)
+        const META_KEY = pid => `sz_profileMeta_${pid}`;
+        function getProfileMeta(profileId) {
+            try {
+                const raw = localStorage.getItem(META_KEY(profileId));
+                if (raw) return JSON.parse(raw);
+            } catch (_) {}
+            return { age: 25, subscription: 'Standard' };
+        }
+        function setProfileMeta(profileId, meta) {
+            localStorage.setItem(META_KEY(profileId), JSON.stringify(meta));
+        }
 
         let editMode = false;
 
@@ -582,14 +866,48 @@
             Object.values(STORAGE).forEach(k => localStorage.removeItem(k));
         }
         function setActiveProfile(p) {
+            const meta = getProfileMeta(p.profileId);
             localStorage.setItem(STORAGE.activeProfileId, p.profileId);
             localStorage.setItem(STORAGE.activeProfileName, p.displayName);
             localStorage.setItem(STORAGE.activeProfileKids, p.isKidsProfile ? '1' : '0');
+            localStorage.setItem(STORAGE.activeProfileAge, meta.age);
+            localStorage.setItem(STORAGE.activeProfileSub, meta.subscription);
         }
         function clearActiveProfile() {
             localStorage.removeItem(STORAGE.activeProfileId);
             localStorage.removeItem(STORAGE.activeProfileName);
             localStorage.removeItem(STORAGE.activeProfileKids);
+            localStorage.removeItem(STORAGE.activeProfileAge);
+            localStorage.removeItem(STORAGE.activeProfileSub);
+        }
+
+        // ── PROXY BRIDGE: înregistrează profilul în UserRegistry-ul backend ────
+        async function registerProxyProfile(displayName, age, subscription) {
+            try {
+                const res = await fetch(API_BASE + '/api/users', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name: displayName, age: parseInt(age, 10), subscription })
+                });
+                // 400 dacă există deja — e ok
+                if (!res.ok) {
+                    const err = await res.json().catch(() => ({}));
+                    if (!String(err.error || '').includes('există deja')) {
+                        console.warn('[Proxy] register:', err.error);
+                    }
+                }
+            } catch (e) { console.warn('[Proxy] register failed:', e); }
+        }
+
+        // ── OBSERVER BRIDGE: auto-abonare la lansări noi ────────────────────
+        async function autoSubscribeObserver(displayName) {
+            try {
+                await fetch(API_BASE + '/api/observer/subscribe', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ userName: displayName })
+                });
+            } catch (e) { console.warn('[Observer] subscribe failed:', e); }
         }
 
         // ── INIT ─────────────────────────────────────────────────────────
@@ -677,6 +995,16 @@
             }
         });
 
+        // ── SWITCH PROFILE (din dashboard) ───────────────────────────────
+        // Forțăm o reîncărcare completă a paginii cu cache-bust, ca să
+        // evităm orice stare reziduală (bfcache, JS cached, DOM stale).
+        // După reload, init() vede că nu există profil activ și apelează
+        // showProfilePicker() care face fetch proaspăt.
+        function switchProfile() {
+            clearActiveProfile();
+            window.location.href = 'account.html?t=' + Date.now();
+        }
+
         // ── PROFILE PICKER ───────────────────────────────────────────────
         async function showProfilePicker(profilesFromLogin) {
             const userId = localStorage.getItem(STORAGE.userId);
@@ -717,9 +1045,13 @@
                     e.stopPropagation();
                     deleteProfile(p.profileId, p.displayName);
                 });
-                card.addEventListener('click', () => {
+                card.addEventListener('click', async () => {
                     if (editMode) return;
                     setActiveProfile(p);
+                    const meta = getProfileMeta(p.profileId);
+                    // Bridge: alimentăm patternurile (Proxy + Observer) cu profilul activ
+                    await registerProxyProfile(p.displayName, meta.age, meta.subscription);
+                    await autoSubscribeObserver(p.displayName);
                     showDashboard();
                 });
                 grid.appendChild(card);
@@ -766,18 +1098,29 @@
             btn.disabled = true;
             btn.innerHTML = '<span class="loader"></span>Se creează…';
             try {
+                const isKids = document.getElementById('cp-kids').checked;
+                const ageInput = parseInt(document.getElementById('cp-age').value, 10) || 25;
+                const subInput = document.getElementById('cp-subscription').value;
                 const res = await fetch(API_BASE + `/api/accounts/${userId}/profiles`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
                         displayName: document.getElementById('cp-name').value.trim(),
-                        isKidsProfile: document.getElementById('cp-kids').checked,
+                        isKidsProfile: isKids,
                         preferredLanguage: document.getElementById('cp-language').value
                     })
                 });
                 const data = await res.json();
                 if (!res.ok) throw new Error(data.error || 'Creare profil eșuată');
+                // Persistăm meta-ul Proxy local (DB nu păstrează age/subscription)
+                if (data.profile && data.profile.profileId) {
+                    setProfileMeta(data.profile.profileId, {
+                        age: isKids ? Math.min(ageInput, 12) : ageInput,
+                        subscription: isKids ? 'Free' : subInput
+                    });
+                }
                 document.getElementById('create-profile-form').reset();
+                document.getElementById('cp-age').value = 25;
                 await showProfilePicker();
             } catch (err) {
                 showAlert('create-profile-alert', err.message);
@@ -794,11 +1137,15 @@
             const userId = localStorage.getItem(STORAGE.userId);
             const profileName = localStorage.getItem(STORAGE.activeProfileName);
             const isKids = localStorage.getItem(STORAGE.activeProfileKids) === '1';
+            const age = localStorage.getItem(STORAGE.activeProfileAge) || '25';
+            const sub = localStorage.getItem(STORAGE.activeProfileSub) || 'Standard';
 
             document.getElementById('dash-greeting').textContent = `Salut, ${profileName}!`;
             document.getElementById('dash-username').textContent = username;
             document.getElementById('dash-email').textContent = email || '—';
             document.getElementById('dash-userid').textContent = userId;
+            document.getElementById('dash-age').textContent = age + ' ani';
+            document.getElementById('dash-sub').textContent = sub;
             document.getElementById('dash-profile-name').textContent = profileName;
             document.getElementById('dash-profile-meta').textContent =
                 isKids ? 'Profil pentru copii' : 'Profil standard';
@@ -808,7 +1155,205 @@
                 'linear-gradient(135deg, var(--gold), #b8893f)';
 
             showPanel('dashboard');
+            initFeaturePanels();
         }
+
+        // ════════════════════════════════════════════════════════════════
+        // PATTERN PANELS — Decorator / Observer / Command
+        // ════════════════════════════════════════════════════════════════
+        function initFeaturePanels() {
+            // Restaurăm canalele preferate (Decorator)
+            const saved = (localStorage.getItem(STORAGE.notifyChannels) || 'Email,Push').split(',');
+            document.querySelectorAll('#dec-channels .channel-chip').forEach(chip => {
+                chip.classList.toggle('active', saved.includes(chip.dataset.ch));
+                chip.onclick = () => chip.classList.toggle('active');
+            });
+            document.getElementById('dec-output').textContent = '';
+
+            // Observer + Command — încărcăm starea curentă
+            refreshObserver();
+            refreshWatchlist();
+        }
+
+        function getActiveProfileName() {
+            return localStorage.getItem(STORAGE.activeProfileName);
+        }
+
+        function getSelectedChannels() {
+            return Array.from(document.querySelectorAll('#dec-channels .channel-chip.active'))
+                .map(c => c.dataset.ch);
+        }
+
+        // ── DECORATOR ──────────────────────────────────────────────────
+        function saveNotifyPrefs() {
+            const channels = getSelectedChannels();
+            localStorage.setItem(STORAGE.notifyChannels, channels.join(','));
+            const out = document.getElementById('dec-output');
+            out.textContent = `✅ Preferințe salvate: ${channels.length ? channels.join(' + ') : 'doar Consolă (base)'}`;
+        }
+
+        async function sendDecoratorNotify() {
+            const userName = getActiveProfileName();
+            const channels = getSelectedChannels();
+            const message = document.getElementById('dec-message').value.trim()
+                || 'Test notificare din StreamZone';
+            try {
+                const res = await fetch(API_BASE + '/api/decorator/notify', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ userName, message, channels })
+                });
+                const data = await res.json();
+                if (!res.ok) throw new Error(data.error || 'Eroare notificare');
+                const out = document.getElementById('dec-output');
+                out.textContent =
+                    `Chain: ${data.chainVisual}\n` +
+                    `Canale active: ${data.channelCount}\n` +
+                    `─────────────────────\n` +
+                    data.outputs.join('\n');
+            } catch (e) {
+                document.getElementById('dec-output').textContent = '❌ ' + e.message;
+            }
+        }
+
+        // ── OBSERVER ───────────────────────────────────────────────────
+        async function refreshObserver() {
+            const userName = getActiveProfileName();
+            try {
+                const res = await fetch(API_BASE + '/api/observer/subscribers');
+                const data = await res.json();
+                document.getElementById('obs-count').textContent = data.observerCount || 0;
+
+                // E posibil ca acest user să fie deja abonat (auto-subscribed la activare)
+                const log = document.getElementById('obs-log');
+                const entries = (data.eventLog || [])
+                    .filter(e => !userName || e.includes(userName) || e.startsWith('[') )
+                    .slice(-8);
+                log.innerHTML = entries.map(e => `<li>${escapeHtml(e)}</li>`).join('')
+                    || '<li style="border-color:var(--text-dim);color:var(--text-muted);">Niciun eveniment înregistrat încă.</li>';
+
+                // Setăm starea butonului
+                const isSubscribed = (data.observerCount || 0) > 0;
+                document.getElementById('obs-status').textContent = isSubscribed ? 'Abonat ✓' : 'Neabonat';
+                document.getElementById('obs-toggle-btn').textContent = isSubscribed ? 'Dezabonează' : 'Abonează';
+            } catch (e) {
+                document.getElementById('obs-status').textContent = '⚠ API offline';
+            }
+        }
+
+        async function toggleObserver() {
+            const userName = getActiveProfileName();
+            const btn = document.getElementById('obs-toggle-btn');
+            const isUnsub = btn.textContent.includes('Dezabonează');
+            const path = isUnsub ? 'unsubscribe' : 'subscribe';
+            try {
+                await fetch(API_BASE + `/api/observer/${path}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ userName })
+                });
+                await refreshObserver();
+            } catch (e) { console.error(e); }
+        }
+
+        async function simulatePublish() {
+            const samples = [
+                { title: 'Premiera 2026', genre: 'Drama',  rating: 'PG13' },
+                { title: 'Aventura Codrilor', genre: 'Action', rating: 'PG' },
+                { title: 'Seara cu Lăutari', genre: 'Drama', rating: 'PG13' },
+                { title: 'Stagiunea Documentar', genre: 'Drama', rating: 'G' }
+            ];
+            const pick = samples[Math.floor(Math.random() * samples.length)];
+            try {
+                await fetch(API_BASE + '/api/observer/publish', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        title: pick.title + ' #' + Math.floor(Math.random()*1000),
+                        description: 'Conținut nou demonstrativ.',
+                        genre: pick.genre,
+                        rating: pick.rating
+                    })
+                });
+                await refreshObserver();
+            } catch (e) { console.error(e); }
+        }
+
+        // ── COMMAND ────────────────────────────────────────────────────
+        async function refreshWatchlist() {
+            const userName = getActiveProfileName();
+            if (!userName) return;
+            try {
+                const res = await fetch(API_BASE + `/api/command/watchlist/${encodeURIComponent(userName)}`);
+                const data = await res.json();
+
+                const list = document.getElementById('cmd-list');
+                if (!data.items || !data.items.length) {
+                    list.innerHTML = '<li style="color:var(--text-muted); padding:8px;">Watchlist gol — adaugă ceva.</li>';
+                } else {
+                    list.innerHTML = data.items.map(t => {
+                        const r = data.ratings && data.ratings[t];
+                        return `
+                            <li class="watchlist-item">
+                                <span>${escapeHtml(t)}</span>
+                                <span>
+                                    ${r ? `<span class="item-rating">★ ${r}</span>` : ''}
+                                    <button onclick="cmdRemoveTitle('${t.replace(/'/g, "\\'")}')" title="Elimină">✕</button>
+                                </span>
+                            </li>
+                        `;
+                    }).join('');
+                }
+
+                document.getElementById('cmd-undo').disabled = !data.canUndo;
+                document.getElementById('cmd-redo').disabled = !data.canRedo;
+
+                const log = document.getElementById('cmd-log');
+                if (data.log && data.log.length) {
+                    log.textContent = data.log.slice(-5).join('\n');
+                } else {
+                    log.textContent = '';
+                }
+            } catch (e) { console.error('watchlist:', e); }
+        }
+
+        async function cmdCall(path, body) {
+            const userName = getActiveProfileName();
+            const res = await fetch(API_BASE + `/api/command/watchlist/${encodeURIComponent(userName)}/${path}`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: body ? JSON.stringify(body) : undefined
+            });
+            await refreshWatchlist();
+            return res.ok;
+        }
+
+        async function cmdAdd() {
+            const title = document.getElementById('cmd-title').value.trim();
+            if (!title) { alert('Introdu un titlu.'); return; }
+            await cmdCall('add', { title });
+            document.getElementById('cmd-title').value = '';
+        }
+
+        async function cmdRemove() {
+            const title = document.getElementById('cmd-title').value.trim();
+            if (!title) { alert('Introdu titlul de eliminat.'); return; }
+            await cmdCall('remove', { title });
+            document.getElementById('cmd-title').value = '';
+        }
+
+        async function cmdRemoveTitle(title) {
+            await cmdCall('remove', { title });
+        }
+
+        async function cmdRate() {
+            const title = document.getElementById('cmd-title').value.trim();
+            if (!title) { alert('Introdu titlul de evaluat.'); return; }
+            await cmdCall('rate', { title, rating: 4.5 });
+        }
+
+        async function cmdUndo() { await cmdCall('undo'); }
+        async function cmdRedo() { await cmdCall('redo'); }
 
         function goToContent() {
             window.location.href = 'index.html';
@@ -839,6 +1384,15 @@
 
         // ── BOOT ─────────────────────────────────────────────────────────
         init();
+
+        // Re-inițializare la restaurare din bfcache (când utilizatorul
+        // se întoarce din portal — browser-ul restaurează DOM-ul vechi
+        // fără să ruleze init, lăsând picker-ul cu stare moartă).
+        window.addEventListener('pageshow', e => {
+            if (e.persisted) {
+                init();
+            }
+        });
     </script>
 </body>
 </html>
